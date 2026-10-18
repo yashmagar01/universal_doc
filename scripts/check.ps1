@@ -47,8 +47,18 @@ if (Test-Path "tests") {
 }
 Pop-Location
 
-# 5. schema freshness: generated doc-schema must equal committed output (wired in M1; stub until then)
-Write-Host "[check] schema-freshness (stub until M1)" -ForegroundColor DarkGray
+# 5. schema freshness: generated doc-schema must equal committed output (D-015)
+Write-Host "[check] schema freshness (regenerate + diff)" -ForegroundColor Cyan
+Push-Location (Join-Path $root "apps\server")
+uv run python -m templix.model.generate
+if ($LASTEXITCODE -ne 0) { $failed = 1 }
+Pop-Location
+$stale = git status --porcelain -- packages/doc-schema/src/index.ts packages/doc-schema/schema
+if ($stale) {
+  $failed = 1
+  Write-Host "  [schema] doc-schema is stale - run 'uv run python -m templix.model.generate' in apps/server and commit" -ForegroundColor Red
+  Write-Host $stale
+}
 
 Pop-Location
 if ($failed) { Write-Host "[check] FAILED" -ForegroundColor Red; exit 1 }

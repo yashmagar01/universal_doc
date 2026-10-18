@@ -190,4 +190,15 @@ No analytics, crash reporting, update checks, or CDNs at runtime (D-026).
 
 | Date | Package | Reason | Licence | Approved by |
 |---|---|---|---|---|
-| | | | | |
+| 2026-10-18 | `pydantic` 2 | Domain models, validation — imported directly (D-015) | MIT | spec §3 table (D-015) |
+| 2026-10-18 | `fastapi` | REST + OpenAPI + SSE (D-014) | MIT | spec §3 table (D-014) |
+| 2026-10-18 | `uvicorn` | ASGI server (D-014) | BSD-3-Clause | spec §3 table (D-014) |
+| 2026-10-18 | `sqlalchemy` 2 | SQLite (WAL) persistence (D-014) | MIT | spec §3 table (D-014) |
+| 2026-10-18 | `alembic` | Migrations with pre-upgrade backup (NFR-REL-03) | MIT | spec §3 table (D-014) |
+| 2026-10-18 | `keyring` | OS keyvault for provider keys, server-side only (D-010, NFR-SEC-03) | MIT | spec §3 table (D-010) |
+| 2026-10-18 | `hypothesis` (dev) | Property tests for op apply/invert (NFR-TEST-05) | MPL-2.0 | NFR-TEST-05 acceptance |
+| 2026-10-18 | `httpx2` (dev) | starlette `TestClient` HTTP layer — required at runtime and type-check time for API tests | BSD-3-Clause | test tooling — confirm with Yash (M1 report) |
+
+Planned-but-not-taken in M1 (stdlib kept them out): `sse-starlette` (plain `StreamingResponse` SSE),
+`structlog` (stdlib `logging` + JSON formatter), `jsonpatch` (own apply/invert), `python-ulid` (uuid),
+`orjson` (stdlib `json`), `aiosqlite` (sync SQLAlchemy Core + threadpool).

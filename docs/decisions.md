@@ -47,6 +47,8 @@ architecture sections are `§` in `system-architecture.md`.
 | D-028 | Rich text is stored as typed spans, never as HTML | Accepted |
 | D-029 | Local models (Ollama etc.) arrive later through the OpenAI-compatible adapter | Deferred |
 | D-030 | Hosted OCR services (including ocr.z.ai) are not used | Accepted |
+| D-031 | TS types are rendered from JSON Schema by the Python generator, not `openapi-typescript` | Proposed |
+| D-032 | Job handlers run inline in M1; background execution lands with M2 | Proposed |
 
 ---
 
@@ -312,6 +314,33 @@ Local OCR/layout models (PaddleOCR-VL, GLM-OCR) arrive as `LayoutEngine` adapter
 party. The *model weights* are MIT-licensed and can be self-hosted.
 **Decision.** Do not integrate any hosted OCR/parsing API. Self-host open weights only, and only in later
 phases (D-006, D-029).
+
+## D-031 — Python generator renders the TS types (not `openapi-typescript`)
+**Status:** Proposed
+**Context.** D-015 named `openapi-typescript`. `apps/server/templix/model/generate.py` instead emits the
+JSON Schema, the OpenAPI document (`packages/doc-schema/schema/openapi.json`) **and** the TypeScript
+(`packages/doc-schema/src/index.ts`) in one deterministic pass
+(`uv run python -m templix.model.generate`), checked by the schema-freshness gate in `scripts/check.ps1`.
+**Decision.** Keep the Python renderer for v1: one process (no Node step in the schema path), byte-identical
+output on every OS (LF, no timestamps), and unit tests pin the emitted types. The intent of D-015 — one
+source of truth, no drift, CI freshness — is unchanged.
+**Alternatives rejected.** `openapi-typescript` (extra toolchain step and its own rendering choices, replacing
+tested code for no behavioural change), hand-written TS (drift — the problem D-015 exists to solve).
+**Consequences.** If `openapi-typescript`-specific output is ever wanted, the committed
+`schema/openapi.json` can feed it directly. Supersede this entry to switch back.
+
+## D-032 — Job handlers run inline in M1
+**Status:** Proposed
+**Context.** D-014 targets in-process `asyncio` jobs with a `ProcessPoolExecutor`. The only M1 handler is the
+deterministic `echo` job, which completes inside the request that submits it.
+**Decision.** `JobRunner` executes handlers inline and records progress events; `GET /jobs/{id}/events`
+streams the recorded events over SSE and closes. The public surface (`register` / `submit` / `get` + event
+list) is what M2's ingestion jobs use unchanged — background execution then becomes a change inside
+`JobRunner` alone.
+**Alternatives rejected.** Shipping asyncio/process-pool execution now, with no long-running job to exercise
+it (untested machinery).
+**Consequences.** A handler that runs long enough would block the event loop; none exists before M2, which
+must move execution off the request path first thing. Flagged in the M1 report.
 
 ---
 

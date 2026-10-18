@@ -1,0 +1,1460 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "BBox": {
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "w": {
+          "title": "W",
+          "type": "number"
+        },
+        "h": {
+          "title": "H",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "w",
+        "h"
+      ],
+      "title": "BBox",
+      "type": "object"
+    },
+    "Component": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "nodeIds": {
+          "default": [],
+          "items": {
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "type": "string"
+          },
+          "title": "Nodeids",
+          "type": "array"
+        },
+        "slotIds": {
+          "default": [],
+          "items": {
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "type": "string"
+          },
+          "title": "Slotids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "Component",
+      "type": "object"
+    },
+    "Constraints": {
+      "additionalProperties": false,
+      "properties": {
+        "maxChars": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maxchars"
+        },
+        "maxLines": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maxlines"
+        },
+        "maxWords": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maxwords"
+        },
+        "fit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fit"
+        },
+        "aspect": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Aspect"
+        },
+        "minDpi": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mindpi"
+        }
+      },
+      "title": "Constraints",
+      "type": "object"
+    },
+    "Content": {
+      "additionalProperties": false,
+      "properties": {
+        "values": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/Run"
+            },
+            "type": "array"
+          },
+          "default": {},
+          "title": "Values",
+          "type": "object"
+        },
+        "instances": {
+          "additionalProperties": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "default": {},
+          "title": "Instances",
+          "type": "object"
+        },
+        "assets": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "default": {},
+          "title": "Assets",
+          "type": "object"
+        }
+      },
+      "title": "Content",
+      "type": "object"
+    },
+    "Document": {
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "default": 1,
+          "title": "Schemaversion",
+          "type": "integer"
+        },
+        "id": {
+          "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "templateId": {
+          "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+          "title": "Templateid",
+          "type": "string"
+        },
+        "templateVersion": {
+          "title": "Templateversion",
+          "type": "integer"
+        },
+        "content": {
+          "$ref": "#/$defs/Content"
+        },
+        "overrides": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "default": {},
+          "title": "Overrides",
+          "type": "object"
+        },
+        "status": {
+          "$ref": "#/$defs/DocumentStatus",
+          "default": "draft"
+        }
+      },
+      "required": [
+        "id",
+        "templateId",
+        "templateVersion"
+      ],
+      "title": "Document",
+      "type": "object"
+    },
+    "DocumentStatus": {
+      "enum": [
+        "draft",
+        "review",
+        "final"
+      ],
+      "title": "DocumentStatus",
+      "type": "string"
+    },
+    "Fidelity": {
+      "additionalProperties": false,
+      "properties": {
+        "pages": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/FidelityPage"
+          },
+          "title": "Pages",
+          "type": "array"
+        },
+        "overall": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Overall"
+        }
+      },
+      "title": "Fidelity",
+      "type": "object"
+    },
+    "FidelityPage": {
+      "additionalProperties": false,
+      "properties": {
+        "ssim": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ssim"
+        },
+        "pixelDiff": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pixeldiff"
+        },
+        "textIoU": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Textiou"
+        }
+      },
+      "title": "FidelityPage",
+      "type": "object"
+    },
+    "Fit": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "default": "shrink",
+          "enum": [
+            "shrink",
+            "clip",
+            "grow",
+            "reflow"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "minScale": {
+          "default": 1.0,
+          "title": "Minscale",
+          "type": "number"
+        },
+        "maxLines": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maxlines"
+        }
+      },
+      "title": "Fit",
+      "type": "object"
+    },
+    "FitMode": {
+      "enum": [
+        "cover",
+        "contain"
+      ],
+      "title": "FitMode",
+      "type": "string"
+    },
+    "FontDef": {
+      "additionalProperties": false,
+      "properties": {
+        "family": {
+          "title": "Family",
+          "type": "string"
+        },
+        "weights": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Weights",
+          "type": "array"
+        },
+        "source": {
+          "$ref": "#/$defs/FontSource",
+          "default": "system"
+        }
+      },
+      "required": [
+        "family"
+      ],
+      "title": "FontDef",
+      "type": "object"
+    },
+    "FontSource": {
+      "enum": [
+        "system",
+        "google",
+        "local"
+      ],
+      "title": "FontSource",
+      "type": "string"
+    },
+    "Node": {
+      "additionalProperties": false,
+      "description": "A layout node. Payload fields are optional and gated by `type` (text -> runs, image ->\nassetId, group -> children, …). A single model keeps one JSON schema / one TS type; the\nper-type payloads are enforced by `validate_payload` below rather than a discriminated union.",
+      "properties": {
+        "id": {
+          "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/NodeType"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "bbox": {
+          "$ref": "#/$defs/BBox"
+        },
+        "z": {
+          "default": 0,
+          "title": "Z",
+          "type": "integer"
+        },
+        "rotation": {
+          "default": 0.0,
+          "title": "Rotation",
+          "type": "number"
+        },
+        "locked": {
+          "default": false,
+          "title": "Locked",
+          "type": "boolean"
+        },
+        "editable": {
+          "default": true,
+          "title": "Editable",
+          "type": "boolean"
+        },
+        "visible": {
+          "default": true,
+          "title": "Visible",
+          "type": "boolean"
+        },
+        "confidence": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "provenance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Provenance"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "groupId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Groupid"
+        },
+        "styleRef": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Styleref"
+        },
+        "runs": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Run"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Runs"
+        },
+        "fit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Fit"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "align": {
+          "anyOf": [
+            {
+              "enum": [
+                "left",
+                "center",
+                "right",
+                "justify"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Align"
+        },
+        "columns": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Columns"
+        },
+        "assetId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assetid"
+        },
+        "crop": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BBox"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "fitMode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FitMode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "aspectLock": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Aspectlock"
+        },
+        "minDpi": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mindpi"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "fill": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fill"
+        },
+        "stroke": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stroke"
+        },
+        "strokeWidth": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Strokewidth"
+        },
+        "dash": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dash"
+        },
+        "radius": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Radius"
+        },
+        "rows": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rows"
+        },
+        "cols": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cols"
+        },
+        "children": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Node"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Children"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "role",
+        "bbox"
+      ],
+      "title": "Node",
+      "type": "object"
+    },
+    "NodeType": {
+      "enum": [
+        "text",
+        "image",
+        "shape",
+        "table",
+        "group",
+        "flow"
+      ],
+      "title": "NodeType",
+      "type": "string"
+    },
+    "Op": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "set_slot",
+            "clear_slot",
+            "set_override",
+            "remove_override"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "slotId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slotid"
+        },
+        "nodeId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Nodeid"
+        },
+        "prop": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prop"
+        },
+        "value": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "Op",
+      "type": "object"
+    },
+    "Page": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "size": {
+          "$ref": "#/$defs/Size"
+        },
+        "nodes": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "title": "Nodes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "size"
+      ],
+      "title": "Page",
+      "type": "object"
+    },
+    "Patch": {
+      "additionalProperties": false,
+      "properties": {
+        "ops": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Op"
+          },
+          "title": "Ops",
+          "type": "array"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "title": "Patch",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "pdfObjects": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Pdfobjects",
+          "type": "array"
+        },
+        "engine": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Engine"
+        }
+      },
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Repeater": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "componentId": {
+          "title": "Componentid",
+          "type": "string"
+        },
+        "containerNodeId": {
+          "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+          "title": "Containernodeid",
+          "type": "string"
+        },
+        "direction": {
+          "default": "stack",
+          "enum": [
+            "stack",
+            "grid"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "gap": {
+          "default": 0.0,
+          "title": "Gap",
+          "type": "number"
+        },
+        "min": {
+          "default": 1,
+          "title": "Min",
+          "type": "integer"
+        },
+        "max": {
+          "default": 20,
+          "title": "Max",
+          "type": "integer"
+        },
+        "overflow": {
+          "default": "flag",
+          "enum": [
+            "flag",
+            "clip",
+            "new-page"
+          ],
+          "title": "Overflow",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "componentId",
+        "containerNodeId"
+      ],
+      "title": "Repeater",
+      "type": "object"
+    },
+    "Rule": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        },
+        "kind": {
+          "$ref": "#/$defs/RuleKind"
+        },
+        "params": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Params",
+          "type": "object"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity",
+          "default": "error"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message"
+        }
+      },
+      "required": [
+        "id",
+        "scope",
+        "kind"
+      ],
+      "title": "Rule",
+      "type": "object"
+    },
+    "RuleKind": {
+      "enum": [
+        "maxChars",
+        "maxLines",
+        "minFontSize",
+        "allowedFonts",
+        "minContrast",
+        "safeMargin",
+        "requiredOnEveryPage",
+        "imageMinDpi",
+        "aspectLock",
+        "noOverflow"
+      ],
+      "title": "RuleKind",
+      "type": "string"
+    },
+    "Run": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "marks": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Marks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "Run",
+      "type": "object"
+    },
+    "Scope": {
+      "enum": [
+        "global",
+        "page",
+        "role",
+        "node"
+      ],
+      "title": "Scope",
+      "type": "string"
+    },
+    "Section": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "slotIds": {
+          "default": [],
+          "items": {
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "type": "string"
+          },
+          "title": "Slotids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "title": "Section",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "error",
+        "warn",
+        "info"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "Size": {
+      "additionalProperties": false,
+      "properties": {
+        "w": {
+          "title": "W",
+          "type": "number"
+        },
+        "h": {
+          "title": "H",
+          "type": "number"
+        }
+      },
+      "required": [
+        "w",
+        "h"
+      ],
+      "title": "Size",
+      "type": "object"
+    },
+    "Slot": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "nodeIds": {
+          "items": {
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "type": "string"
+          },
+          "title": "Nodeids",
+          "type": "array"
+        },
+        "field": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Field"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/SlotKind"
+        },
+        "constraints": {
+          "$ref": "#/$defs/Constraints",
+          "default": {
+            "maxChars": null,
+            "maxLines": null,
+            "maxWords": null,
+            "fit": null,
+            "aspect": null,
+            "minDpi": null
+          }
+        },
+        "required": {
+          "default": false,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "section": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Section"
+        }
+      },
+      "required": [
+        "id",
+        "nodeIds",
+        "label",
+        "kind"
+      ],
+      "title": "Slot",
+      "type": "object"
+    },
+    "SlotKind": {
+      "enum": [
+        "text",
+        "richtext",
+        "image",
+        "date",
+        "link",
+        "choice"
+      ],
+      "title": "SlotKind",
+      "type": "string"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "properties": {
+        "fileName": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Filename"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "pageCount": {
+          "default": 0,
+          "title": "Pagecount",
+          "type": "integer"
+        },
+        "kind": {
+          "default": "blank",
+          "enum": [
+            "pdf",
+            "blank",
+            "template"
+          ],
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "title": "Source",
+      "type": "object"
+    },
+    "Spacing": {
+      "additionalProperties": false,
+      "properties": {
+        "margins": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "default": {},
+          "title": "Margins",
+          "type": "object"
+        },
+        "gutter": {
+          "default": 0.0,
+          "title": "Gutter",
+          "type": "number"
+        },
+        "baseline": {
+          "default": 0.0,
+          "title": "Baseline",
+          "type": "number"
+        }
+      },
+      "title": "Spacing",
+      "type": "object"
+    },
+    "Template": {
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "default": 1,
+          "title": "Schemaversion",
+          "type": "integer"
+        },
+        "id": {
+          "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "source": {
+          "$ref": "#/$defs/Source",
+          "default": {
+            "fileName": null,
+            "sha256": null,
+            "pageCount": 0,
+            "kind": "blank"
+          }
+        },
+        "tokens": {
+          "$ref": "#/$defs/Tokens"
+        },
+        "pages": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Page"
+          },
+          "title": "Pages",
+          "type": "array"
+        },
+        "sections": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Section"
+          },
+          "title": "Sections",
+          "type": "array"
+        },
+        "slots": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Slot"
+          },
+          "title": "Slots",
+          "type": "array"
+        },
+        "components": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Component"
+          },
+          "title": "Components",
+          "type": "array"
+        },
+        "repeaters": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Repeater"
+          },
+          "title": "Repeaters",
+          "type": "array"
+        },
+        "rules": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Rule"
+          },
+          "title": "Rules",
+          "type": "array"
+        },
+        "fidelity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Fidelity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "Template",
+      "type": "object"
+    },
+    "TextStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "font": {
+          "title": "Font",
+          "type": "string"
+        },
+        "size": {
+          "title": "Size",
+          "type": "number"
+        },
+        "leading": {
+          "title": "Leading",
+          "type": "number"
+        },
+        "tracking": {
+          "default": 0.0,
+          "title": "Tracking",
+          "type": "number"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Color"
+        },
+        "transform": {
+          "anyOf": [
+            {
+              "enum": [
+                "uppercase",
+                "lowercase",
+                "none"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Transform"
+        }
+      },
+      "required": [
+        "font",
+        "size",
+        "leading"
+      ],
+      "title": "TextStyle",
+      "type": "object"
+    },
+    "Tokens": {
+      "additionalProperties": false,
+      "properties": {
+        "colors": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {},
+          "title": "Colors",
+          "type": "object"
+        },
+        "fonts": {
+          "additionalProperties": {
+            "$ref": "#/$defs/FontDef"
+          },
+          "default": {},
+          "title": "Fonts",
+          "type": "object"
+        },
+        "textStyles": {
+          "additionalProperties": {
+            "$ref": "#/$defs/TextStyle"
+          },
+          "default": {},
+          "title": "Textstyles",
+          "type": "object"
+        },
+        "spacing": {
+          "$ref": "#/$defs/Spacing",
+          "default": {
+            "margins": {},
+            "gutter": 0.0,
+            "baseline": 0.0
+          }
+        }
+      },
+      "title": "Tokens",
+      "type": "object"
+    }
+  }
+}

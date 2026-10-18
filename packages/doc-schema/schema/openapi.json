@@ -1,0 +1,1989 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Templix",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/status": {
+      "get": {
+        "summary": "Status",
+        "operationId": "status_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Status Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/session": {
+      "post": {
+        "summary": "Session",
+        "operationId": "session_session_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Session Session Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templates": {
+      "get": {
+        "summary": "Templates List",
+        "operationId": "templates_list_templates_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Templates List Templates Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Templates Create",
+        "operationId": "templates_create_templates_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Template"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Templates Create Templates Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templates/{tpl_id}": {
+      "get": {
+        "summary": "Templates Get",
+        "operationId": "templates_get_templates__tpl_id__get",
+        "parameters": [
+          {
+            "name": "tpl_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Tpl Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Templates Get Templates  Tpl Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents": {
+      "get": {
+        "summary": "Documents List",
+        "operationId": "documents_list_documents_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Documents List Documents Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Documents Create",
+        "operationId": "documents_create_documents_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Documents Create Documents Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/{doc_id}": {
+      "get": {
+        "summary": "Documents Get",
+        "operationId": "documents_get_documents__doc_id__get",
+        "parameters": [
+          {
+            "name": "doc_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Doc Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Documents Get Documents  Doc Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/{doc_id}/ops": {
+      "post": {
+        "summary": "Documents Ops",
+        "description": "Apply a forward patch; persist it; return the new doc + the undo patch.",
+        "operationId": "documents_ops_documents__doc_id__ops_post",
+        "parameters": [
+          {
+            "name": "doc_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Doc Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Patch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Documents Ops Documents  Doc Id  Ops Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs": {
+      "post": {
+        "summary": "Jobs Create",
+        "operationId": "jobs_create_jobs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Jobs Create Jobs Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{job_id}": {
+      "get": {
+        "summary": "Jobs Get",
+        "operationId": "jobs_get_jobs__job_id__get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Jobs Get Jobs  Job Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{job_id}/events": {
+      "get": {
+        "summary": "Jobs Events",
+        "description": "Server-Sent Events for a job: each progress event, then close on the terminal one.",
+        "operationId": "jobs_events_jobs__job_id__events_get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/providers/{name}/key": {
+      "put": {
+        "summary": "Provider Set Key",
+        "operationId": "provider_set_key_providers__name__key_put",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderKeyIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Provider Set Key Providers  Name  Key Put"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Provider Delete Key",
+        "operationId": "provider_delete_key_providers__name__key_delete",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Provider Delete Key Providers  Name  Key Delete"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/providers/{name}": {
+      "get": {
+        "summary": "Provider Get",
+        "operationId": "provider_get_providers__name__get",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Provider Get Providers  Name  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BBox": {
+        "properties": {
+          "x": {
+            "type": "number",
+            "title": "X"
+          },
+          "y": {
+            "type": "number",
+            "title": "Y"
+          },
+          "w": {
+            "type": "number",
+            "title": "W"
+          },
+          "h": {
+            "type": "number",
+            "title": "H"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "x",
+          "y",
+          "w",
+          "h"
+        ],
+        "title": "BBox"
+      },
+      "Component": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "nodeIds": {
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "type": "array",
+            "title": "Nodeids",
+            "default": []
+          },
+          "slotIds": {
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "type": "array",
+            "title": "Slotids",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "Component"
+      },
+      "Constraints": {
+        "properties": {
+          "maxChars": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maxchars"
+          },
+          "maxLines": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maxlines"
+          },
+          "maxWords": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maxwords"
+          },
+          "fit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fit"
+          },
+          "aspect": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aspect"
+          },
+          "minDpi": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mindpi"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Constraints"
+      },
+      "DocumentCreate": {
+        "properties": {
+          "templateId": {
+            "type": "string",
+            "title": "Templateid"
+          },
+          "templateVersion": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Templateversion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "templateId"
+        ],
+        "title": "DocumentCreate"
+      },
+      "Fidelity": {
+        "properties": {
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/FidelityPage"
+            },
+            "type": "array",
+            "title": "Pages",
+            "default": []
+          },
+          "overall": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overall"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Fidelity"
+      },
+      "FidelityPage": {
+        "properties": {
+          "ssim": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ssim"
+          },
+          "pixelDiff": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pixeldiff"
+          },
+          "textIoU": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textiou"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "FidelityPage"
+      },
+      "Fit": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "shrink",
+              "clip",
+              "grow",
+              "reflow"
+            ],
+            "title": "Mode",
+            "default": "shrink"
+          },
+          "minScale": {
+            "type": "number",
+            "title": "Minscale",
+            "default": 1.0
+          },
+          "maxLines": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maxlines"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Fit"
+      },
+      "FitMode": {
+        "type": "string",
+        "enum": [
+          "cover",
+          "contain"
+        ],
+        "title": "FitMode"
+      },
+      "FontDef": {
+        "properties": {
+          "family": {
+            "type": "string",
+            "title": "Family"
+          },
+          "weights": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Weights",
+            "default": []
+          },
+          "source": {
+            "$ref": "#/components/schemas/FontSource",
+            "default": "system"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "family"
+        ],
+        "title": "FontDef"
+      },
+      "FontSource": {
+        "type": "string",
+        "enum": [
+          "system",
+          "google",
+          "local"
+        ],
+        "title": "FontSource"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "JobCreate": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Payload",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "title": "JobCreate"
+      },
+      "Node": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "title": "Id"
+          },
+          "type": {
+            "$ref": "#/components/schemas/NodeType"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "bbox": {
+            "$ref": "#/components/schemas/BBox"
+          },
+          "z": {
+            "type": "integer",
+            "title": "Z",
+            "default": 0
+          },
+          "rotation": {
+            "type": "number",
+            "title": "Rotation",
+            "default": 0.0
+          },
+          "locked": {
+            "type": "boolean",
+            "title": "Locked",
+            "default": false
+          },
+          "editable": {
+            "type": "boolean",
+            "title": "Editable",
+            "default": true
+          },
+          "visible": {
+            "type": "boolean",
+            "title": "Visible",
+            "default": true
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "default": 1.0
+          },
+          "provenance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Provenance"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "groupId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Groupid"
+          },
+          "styleRef": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Styleref"
+          },
+          "runs": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Run"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runs"
+          },
+          "fit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Fit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "align": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "left",
+                  "center",
+                  "right",
+                  "justify"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Align"
+          },
+          "columns": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Columns"
+          },
+          "assetId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assetid"
+          },
+          "crop": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BBox"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fitMode": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FitMode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "aspectLock": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aspectlock"
+          },
+          "minDpi": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mindpi"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Path"
+          },
+          "fill": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fill"
+          },
+          "stroke": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stroke"
+          },
+          "strokeWidth": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strokewidth"
+          },
+          "dash": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dash"
+          },
+          "radius": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Radius"
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rows"
+          },
+          "cols": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cols"
+          },
+          "children": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Node"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Children"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "role",
+          "bbox"
+        ],
+        "title": "Node",
+        "description": "A layout node. Payload fields are optional and gated by `type` (text -> runs, image ->\nassetId, group -> children, …). A single model keeps one JSON schema / one TS type; the\nper-type payloads are enforced by `validate_payload` below rather than a discriminated union."
+      },
+      "NodeType": {
+        "type": "string",
+        "enum": [
+          "text",
+          "image",
+          "shape",
+          "table",
+          "group",
+          "flow"
+        ],
+        "title": "NodeType"
+      },
+      "Op": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "set_slot",
+              "clear_slot",
+              "set_override",
+              "remove_override"
+            ],
+            "title": "Kind"
+          },
+          "slotId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slotid"
+          },
+          "nodeId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nodeid"
+          },
+          "prop": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prop"
+          },
+          "value": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "title": "Op"
+      },
+      "Page": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/Node"
+            },
+            "type": "array",
+            "title": "Nodes",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "size"
+        ],
+        "title": "Page"
+      },
+      "Patch": {
+        "properties": {
+          "ops": {
+            "items": {
+              "$ref": "#/components/schemas/Op"
+            },
+            "type": "array",
+            "title": "Ops",
+            "default": []
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Patch"
+      },
+      "Provenance": {
+        "properties": {
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "pdfObjects": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Pdfobjects",
+            "default": []
+          },
+          "engine": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Engine"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Provenance"
+      },
+      "ProviderKeyIn": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key"
+        ],
+        "title": "ProviderKeyIn"
+      },
+      "Repeater": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "componentId": {
+            "type": "string",
+            "title": "Componentid"
+          },
+          "containerNodeId": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "title": "Containernodeid"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "stack",
+              "grid"
+            ],
+            "title": "Direction",
+            "default": "stack"
+          },
+          "gap": {
+            "type": "number",
+            "title": "Gap",
+            "default": 0.0
+          },
+          "min": {
+            "type": "integer",
+            "title": "Min",
+            "default": 1
+          },
+          "max": {
+            "type": "integer",
+            "title": "Max",
+            "default": 20
+          },
+          "overflow": {
+            "type": "string",
+            "enum": [
+              "flag",
+              "clip",
+              "new-page"
+            ],
+            "title": "Overflow",
+            "default": "flag"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "componentId",
+          "containerNodeId"
+        ],
+        "title": "Repeater"
+      },
+      "Rule": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/Scope"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/RuleKind"
+          },
+          "params": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Params",
+            "default": {}
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity",
+            "default": "error"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "scope",
+          "kind"
+        ],
+        "title": "Rule"
+      },
+      "RuleKind": {
+        "type": "string",
+        "enum": [
+          "maxChars",
+          "maxLines",
+          "minFontSize",
+          "allowedFonts",
+          "minContrast",
+          "safeMargin",
+          "requiredOnEveryPage",
+          "imageMinDpi",
+          "aspectLock",
+          "noOverflow"
+        ],
+        "title": "RuleKind"
+      },
+      "Run": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "marks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Marks",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "Run"
+      },
+      "Scope": {
+        "type": "string",
+        "enum": [
+          "global",
+          "page",
+          "role",
+          "node"
+        ],
+        "title": "Scope"
+      },
+      "Section": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "slotIds": {
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "type": "array",
+            "title": "Slotids",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "title": "Section"
+      },
+      "Severity": {
+        "type": "string",
+        "enum": [
+          "error",
+          "warn",
+          "info"
+        ],
+        "title": "Severity"
+      },
+      "Size": {
+        "properties": {
+          "w": {
+            "type": "number",
+            "title": "W"
+          },
+          "h": {
+            "type": "number",
+            "title": "H"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "w",
+          "h"
+        ],
+        "title": "Size"
+      },
+      "Slot": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "title": "Id"
+          },
+          "nodeIds": {
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "type": "array",
+            "title": "Nodeids"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Field"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/SlotKind"
+          },
+          "constraints": {
+            "$ref": "#/components/schemas/Constraints",
+            "default": {}
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "default": false
+          },
+          "section": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Section"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "nodeIds",
+          "label",
+          "kind"
+        ],
+        "title": "Slot"
+      },
+      "SlotKind": {
+        "type": "string",
+        "enum": [
+          "text",
+          "richtext",
+          "image",
+          "date",
+          "link",
+          "choice"
+        ],
+        "title": "SlotKind"
+      },
+      "Source": {
+        "properties": {
+          "fileName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filename"
+          },
+          "sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sha256"
+          },
+          "pageCount": {
+            "type": "integer",
+            "title": "Pagecount",
+            "default": 0
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "pdf",
+              "blank",
+              "template"
+            ],
+            "title": "Kind",
+            "default": "blank"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Source"
+      },
+      "Spacing": {
+        "properties": {
+          "margins": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Margins",
+            "default": {}
+          },
+          "gutter": {
+            "type": "number",
+            "title": "Gutter",
+            "default": 0.0
+          },
+          "baseline": {
+            "type": "number",
+            "title": "Baseline",
+            "default": 0.0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Spacing"
+      },
+      "Template": {
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "title": "Schemaversion",
+            "default": 1
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "default": 1
+          },
+          "source": {
+            "$ref": "#/components/schemas/Source",
+            "default": {
+              "pageCount": 0,
+              "kind": "blank"
+            }
+          },
+          "tokens": {
+            "$ref": "#/components/schemas/Tokens"
+          },
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/Page"
+            },
+            "type": "array",
+            "title": "Pages",
+            "default": []
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/Section"
+            },
+            "type": "array",
+            "title": "Sections",
+            "default": []
+          },
+          "slots": {
+            "items": {
+              "$ref": "#/components/schemas/Slot"
+            },
+            "type": "array",
+            "title": "Slots",
+            "default": []
+          },
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/Component"
+            },
+            "type": "array",
+            "title": "Components",
+            "default": []
+          },
+          "repeaters": {
+            "items": {
+              "$ref": "#/components/schemas/Repeater"
+            },
+            "type": "array",
+            "title": "Repeaters",
+            "default": []
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/Rule"
+            },
+            "type": "array",
+            "title": "Rules",
+            "default": []
+          },
+          "fidelity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Fidelity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "Template"
+      },
+      "TextStyle": {
+        "properties": {
+          "font": {
+            "type": "string",
+            "title": "Font"
+          },
+          "size": {
+            "type": "number",
+            "title": "Size"
+          },
+          "leading": {
+            "type": "number",
+            "title": "Leading"
+          },
+          "tracking": {
+            "type": "number",
+            "title": "Tracking",
+            "default": 0.0
+          },
+          "color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Color"
+          },
+          "transform": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "uppercase",
+                  "lowercase",
+                  "none"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transform"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "font",
+          "size",
+          "leading"
+        ],
+        "title": "TextStyle"
+      },
+      "Tokens": {
+        "properties": {
+          "colors": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Colors",
+            "default": {}
+          },
+          "fonts": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/FontDef"
+            },
+            "type": "object",
+            "title": "Fonts",
+            "default": {}
+          },
+          "textStyles": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/TextStyle"
+            },
+            "type": "object",
+            "title": "Textstyles",
+            "default": {}
+          },
+          "spacing": {
+            "$ref": "#/components/schemas/Spacing",
+            "default": {
+              "margins": {},
+              "gutter": 0.0,
+              "baseline": 0.0
+            }
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Tokens"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

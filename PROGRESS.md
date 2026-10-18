@@ -1,31 +1,45 @@
 # Progress
 
-## Status: M0 complete, awaiting owner approval (2026-10-18)
+## Status: M1 complete, awaiting owner approval (2026-10-18)
 
-Milestone gates for M0 are green. M1 is **not** started. Stopped per PLAN.md §1 / AGENT_PROMPT §8.
+M0 shipped (`fef0efd`). M1 (backend core, data model, security) is built with all gates green. Stopped per
+AGENT_PROMPT §4.2 — M2 does not start without Yash's go-ahead.
 
-### M0 — Foundation & design system
+### M1 — Backend core, data model, security
 
-- **Landed:** pnpm workspace (`apps/web` + `packages/ui`), Vite + React 19 + TS + Tailwind v4, five-token
-  design system (`packages/ui`), six screens (home, mode, analysis, manual, ai-assist, settings) + dev gallery
-  + 404, fixture backend (`VITE_FIXTURES=1`, `apps/web/src/fixtures/`) with 4 fixture PDFs, copy-lint +
-  no-literal-metrics ESLint rules.
-- **Gates (all green):**
-  - `scripts/check.ps1` → lint (eslint + copy-lint + no-literal-metrics), typecheck, ruff + pyright, unit
-    (15 vitest: token-contrast + counter). Exit 0.
-  - `scripts/e2e.ps1` → 15 Playwright tests: axe no serious/critical on 8 routes (NFR-A11Y-01), zero-network
-    assertion, parity artifact capture. Exit 0. Stable across 3 consecutive runs.
-- **Parity (NFR-TEST-04):** scaffolded. `e2e/parity/regions.ts` lists our data-qa landmark regions per screen;
-  `e2e/parity/parity.spec.ts` renders each screen at 1333×900 @ DPR 1.2 and writes screenshot + bbox JSON to
-  `artifacts/parity/` for visual review. The numeric stitch↔ours ±4% comparison is **deferred** — the Stitch
-  exports carry no data-qa, use an external-CDN layout, and the region mapping needs visual sign-off against
-  the PNGs (agent cannot view PNGs). See M0 report.
+- **Domain models (D-015):** Pydantic v2 in `apps/server/templix/model/` — Template/Content/Document,
+  Page/Node/Slot/Rule/Section/Fidelity, Patch/Ops with apply + invert, strict (extra="forbid") models.
+- **Schema pipeline:** `uv run python -m templix.model.generate` writes JSON Schema + OpenAPI
+  (`packages/doc-schema/schema/*.json`) and generated TypeScript (`packages/doc-schema/src/index.ts`) in one
+  deterministic pass (LF, no timestamps). `scripts/check.ps1` step 5 regenerates and diffs → freshness gate.
+- **Persistence:** SQLite WAL + SQLAlchemy Core (`templix/store/`), content-addressed blob store (sha256,
+  2-char sharding, idempotent puts), Alembic scaffold + initial migration with pre-upgrade backup
+  (NFR-REL-03), kill-9/WAL recovery test (NFR-REL-01).
+- **Security (architecture §10.2):** session cookie + launch token, Host/Origin checks (DNS-rebinding +
+  CSRF, NFR-SEC-02), security headers, constant-time token compare.
+- **API:** `/status`, `/session`, template CRUD, document CRUD, `/documents/:id/ops` (schema + ownership +
+  size limits: ≤1000 ops, ≤128 KiB), job runner with SSE `GET /jobs/:id/events`, provider endpoints
+  `PUT/GET/DELETE /providers/{name}/key` (write-only, masked hint).
+- **Vault (D-010, NFR-SEC-03):** `templix/vault` (`KeyringStore` on `keyring`, `MemoryStore` for tests) +
+  `templix/provider.FakeProvider` (offline, deterministic). Keys never in DB, logs, responses.
+- **Logs:** stdlib `logging` with JSON formatter + idempotent secret-redaction (NFR-OBS-01), key-shaped
+  strings covered by tests.
+- **Deviations (Proposed ADRs):** D-031 (Python generator renders the TS, not `openapi-typescript`),
+  D-032 (job handlers run inline in M1; background execution is M2's first task).
+- **Dependencies:** 7 added this milestone, logged in `docs/dependencies.md §9` (NFR-SEC-08); 6 planned
+  packages avoided by using the stdlib (noted in that log).
+
+### Gates
+
+- `scripts/check.ps1`: eslint (code + copy-lint + no-literal-metrics), typecheck (5 tsconfigs), ruff +
+  pyright strict, 15 vitest, 46 pytest, schema freshness — all green in the final M1 run.
+- `apps/server`: `uv run ruff check .` → 0; `uv run pyright .` → 0; `uv run pytest -q` → 46 passed.
 
 ### Open / unverified
 
-- Landmark parity numeric comparison vs Stitch (see above) — pending visual mapping sign-off.
-- Pixel fidelity against `screen.png` — unverified (no visual inspection in this environment).
+- Landmark/pixel parity numeric comparison vs Stitch (from M0) — pending visual sign-off.
+- `httpx2` (dev) was added for starlette's `TestClient`; confirm it as test tooling (M1 report Q).
 
 ### Next
 
-M1 (functional requirements) after Yash's go-ahead on the M0 report.
+M2 (ingestion) after Yash's go-ahead on the M1 report.
