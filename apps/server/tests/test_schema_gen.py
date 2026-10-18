@@ -37,5 +37,11 @@ def test_render_openapi_describes_the_api() -> None:
     doc: Any = json.loads(first)
     assert doc["openapi"].startswith("3.")
     assert doc["info"]["title"] == "Templix"
-    for path in ("/status", "/templates", "/documents/{doc_id}/ops", "/jobs", "/providers/{name}/key"):
+    for path in (
+        "/api/v1/status",
+        "/api/v1/templates",
+        "/api/v1/documents/{doc_id}/ops",
+        "/api/v1/jobs",
+        "/api/v1/providers/{name}/key",
+    ):
         assert path in doc["paths"]

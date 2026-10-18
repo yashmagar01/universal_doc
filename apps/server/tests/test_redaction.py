@@ -56,7 +56,7 @@ def test_json_formatter_emits_structured_redacted_line() -> None:
 
 
 def test_app_wires_structured_logging(client: TestClient) -> None:
-    assert client.get("/status").status_code == 200  # app factory ran configure_logging()
+    assert client.get("/api/v1/status").status_code == 200  # app factory ran configure_logging()
     logger = logging.getLogger("templix.api")
     assert any(isinstance(getattr(h, "formatter", None), JsonFormatter) for h in logger.handlers)
     assert logger.propagate is False  # no duplicate plain-format output via root/uvicorn

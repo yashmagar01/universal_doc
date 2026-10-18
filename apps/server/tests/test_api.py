@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import time
 from collections.abc import Mapping
 from typing import Any
 
@@ -28,82 +29,82 @@ def make_template_with_node() -> tuple[Template, str, str]:
 
 
 def _seed(client: TestClient, tpl: Template) -> str:
-    client.post("/templates", json=tpl.model_dump(mode="json"))
-    doc = client.post("/documents", json={"templateId": tpl.id}).json()
+    client.post("/api/v1/templates", json=tpl.model_dump(mode="json"))
+    doc = client.post("/api/v1/documents", json={"templateId": tpl.id}).json()
     return str(doc["id"])
 
 
 def test_status_requires_token(client: TestClient) -> None:
-    r = client.get("/status", headers={"X-Templix-Token": ""})
+    r = client.get("/api/v1/status", headers={"X-Templix-Token": ""})
     assert r.status_code == 401
 
 
 def test_status_ok(client: TestClient) -> None:
-    r = client.get("/status")
+    r = client.get("/api/v1/status")
     assert r.status_code == 200
     assert r.json()["schemaVersion"] == 1
 
 
 def test_security_headers_present(client: TestClient) -> None:
-    h = client.get("/status").headers
+    h = client.get("/api/v1/status").headers
     assert h["x-content-type-options"] == "nosniff"
     assert h["x-frame-options"] == "DENY"
     assert h["content-security-policy"] == "default-src 'self'"
 
 
 def test_session_sets_strict_cookie(client: TestClient) -> None:
-    r = client.post("/session", headers={"X-Templix-Launch-Token": TOKEN})
+    r = client.post("/api/v1/session", headers={"X-Templix-Launch-Token": TOKEN})
     assert r.status_code == 200
     assert "templix_session" in r.cookies
 
 
 def test_template_crud(client: TestClient) -> None:
     tpl, _ = make_template()
-    r = client.post("/templates", json=tpl.model_dump(mode="json"))
+    r = client.post("/api/v1/templates", json=tpl.model_dump(mode="json"))
     assert r.status_code == 201
 
-    listed = client.get("/templates").json()
+    listed = client.get("/api/v1/templates").json()
     assert any(t["id"] == tpl.id for t in listed)
 
-    got = client.get(f"/templates/{tpl.id}")
+    got = client.get(f"/api/v1/templates/{tpl.id}")
     assert got.status_code == 200
     assert got.json()["name"] == "Invoice"
 
-    dup = client.post("/templates", json=tpl.model_dump(mode="json"))
+    dup = client.post("/api/v1/templates", json=tpl.model_dump(mode="json"))
     assert dup.status_code == 409
 
 
 def test_document_create_and_ops_roundtrip(client: TestClient) -> None:
     tpl, slot_id = make_template()
-    client.post("/templates", json=tpl.model_dump(mode="json"))
+    client.post("/api/v1/templates", json=tpl.model_dump(mode="json"))
 
-    doc = client.post("/documents", json={"templateId": tpl.id}).json()
+    doc = client.post("/api/v1/documents", json={"templateId": tpl.id}).json()
     assert doc["content"]["values"][slot_id] == []
 
     patch: dict[str, Any] = {
         "ops": [{"kind": "set_slot", "slotId": slot_id, "value": [{"text": "Hello"}]}]
     }
-    applied = client.post(f"/documents/{doc['id']}/ops", json=patch)
+    applied = client.post(f"/api/v1/documents/{doc['id']}/ops", json=patch)
     assert applied.status_code == 200
     body: Mapping[str, Any] = applied.json()
     assert body["document"]["content"]["values"][slot_id] == [{"text": "Hello", "marks": []}]
     assert body["seq"] == 1
 
-    undo = client.post(f"/documents/{doc['id']}/ops", json=body["undo"])
+    undo = client.post(f"/api/v1/documents/{doc['id']}/ops", json=body["undo"])
     assert undo.status_code == 200
     assert undo.json()["document"]["content"]["values"][slot_id] == []
 
 
 def test_document_not_found(client: TestClient) -> None:
-    assert client.get("/documents/NOPE").status_code == 404
-    assert client.post("/documents", json={"templateId": "NOPE"}).status_code == 404
+    assert client.get("/api/v1/documents/NOPE").status_code == 404
+    assert client.post("/api/v1/documents", json={"templateId": "NOPE"}).status_code == 404
 
 
 def test_ops_rejects_slot_not_owned_by_document(client: TestClient) -> None:
     tpl, _ = make_template()
     doc_id = _seed(client, tpl)
     patch: dict[str, Any] = {"ops": [{"kind": "set_slot", "slotId": "nope", "value": []}]}
-    r = client.post(f"/documents/{doc_id}/ops", json=patch)
+    r = client.post(f"/api/v1/documents/{doc_id}/ops", json=patch)
     assert r.status_code == 422
     assert "does not belong" in str(r.json()["detail"])
 
@@ -112,7 +113,7 @@ def test_ops_rejects_node_not_owned_by_document(client: TestClient) -> None:
     tpl, _, _ = make_template_with_node()
     doc_id = _seed(client, tpl)
     op = {"kind": "set_override", "nodeId": "nope", "prop": "fill", "value": "#ff0000"}
-    r = client.post(f"/documents/{doc_id}/ops", json={"ops": [op]})
+    r = client.post(f"/api/v1/documents/{doc_id}/ops", json={"ops": [op]})
     assert r.status_code == 422
     assert "does not belong" in str(r.json()["detail"])
 
@@ -121,7 +122,7 @@ def test_ops_override_on_owned_node(client: TestClient) -> None:
     tpl, _, node_id = make_template_with_node()
     doc_id = _seed(client, tpl)
     op = {"kind": "set_override", "nodeId": node_id, "prop": "fill", "value": "#ff0000"}
-    r = client.post(f"/documents/{doc_id}/ops", json={"ops": [op]})
+    r = client.post(f"/api/v1/documents/{doc_id}/ops", json={"ops": [op]})
     assert r.status_code == 200
     assert r.json()["document"]["overrides"][node_id]["fill"] == "#ff0000"
 
@@ -132,7 +133,7 @@ def test_ops_rejects_too_many_ops(client: TestClient) -> None:
     ops: list[dict[str, Any]] = [
         {"kind": "set_slot", "slotId": slot_id, "value": []} for _ in range(MAX_OPS + 1)
     ]
-    r = client.post(f"/documents/{doc_id}/ops", json={"ops": ops})
+    r = client.post(f"/api/v1/documents/{doc_id}/ops", json={"ops": ops})
     assert r.status_code == 422
     assert f"{MAX_OPS} ops" in str(r.json()["detail"])
 
@@ -141,44 +142,74 @@ def test_ops_rejects_oversized_patch(client: TestClient) -> None:
     tpl, slot_id = make_template()
     doc_id = _seed(client, tpl)
     big = [{"kind": "set_slot", "slotId": slot_id, "value": [{"text": "x" * 200_000}]}]
-    r = client.post(f"/documents/{doc_id}/ops", json={"ops": big})
+    r = client.post(f"/api/v1/documents/{doc_id}/ops", json={"ops": big})
     assert r.status_code == 413
     assert f"{MAX_PATCH_BYTES} bytes" in str(r.json()["detail"])
 
 
-# --- jobs ---
+# --- jobs (handlers run on a background thread since D-032; poll for terminal state) ---
+
+TERMINAL = ("done", "failed", "cancelled")
+
+
+def _wait(client: TestClient, job_id: str, *, timeout: float = 5.0) -> dict[str, Any]:
+    deadline = time.monotonic() + timeout
+    while True:
+        status = client.get(f"/api/v1/jobs/{job_id}").json()
+        if status["status"] in TERMINAL:
+            return status
+        assert time.monotonic() < deadline, f"job {job_id} still {status['status']} after {timeout}s"
+        time.sleep(0.01)
 
 
 def test_job_unknown_kind_404(client: TestClient) -> None:
-    assert client.post("/jobs", json={"kind": "nope"}).status_code == 404
+    assert client.post("/api/v1/jobs", json={"kind": "nope"}).status_code == 404
 
 
 def test_job_not_found(client: TestClient) -> None:
-    assert client.get("/jobs/NOPE").status_code == 404
-    assert client.get("/jobs/NOPE/events").status_code == 404
+    assert client.get("/api/v1/jobs/NOPE").status_code == 404
+    assert client.get("/api/v1/jobs/NOPE/events").status_code == 404
+    assert client.post("/api/v1/jobs/NOPE/cancel").status_code == 404
 
 
 def test_job_submit_and_status(client: TestClient) -> None:
-    r = client.post("/jobs", json={"kind": "echo", "payload": {"steps": 3}})
+    r = client.post("/api/v1/jobs", json={"kind": "echo", "payload": {"steps": 3}})
     assert r.status_code == 202
-    job_id = r.json()["id"]
-    status = client.get(f"/jobs/{job_id}").json()
+    status = _wait(client, r.json()["id"])
     assert status["status"] == "done"
     assert status["error"] is None
 
 
 def test_job_failure_is_reported_not_raised(client: TestClient) -> None:
-    r = client.post("/jobs", json={"kind": "echo", "payload": {"steps": 1, "fail": True}})
+    r = client.post("/api/v1/jobs", json={"kind": "echo", "payload": {"steps": 1, "fail": True}})
     assert r.status_code == 202
-    status = client.get(f"/jobs/{r.json()['id']}").json()
+    status = _wait(client, r.json()["id"])
     assert status["status"] == "failed"
     assert "demo failure" in status["error"]
 
 
+def test_job_cancel_stops_running_job(client: TestClient) -> None:
+    r = client.post("/api/v1/jobs", json={"kind": "echo", "payload": {"steps": 50, "delay": 0.05}})
+    job_id = r.json()["id"]
+    ack = client.post(f"/api/v1/jobs/{job_id}/cancel")
+    assert ack.status_code == 200
+    assert ack.json()["cancelRequested"] is True
+    assert _wait(client, job_id)["status"] == "cancelled"
+
+
+def test_job_cancel_is_idempotent_once_terminal(client: TestClient) -> None:
+    job_id = client.post("/api/v1/jobs", json={"kind": "echo", "payload": {"steps": 1}}).json()["id"]
+    _wait(client, job_id)
+    ack = client.post(f"/api/v1/jobs/{job_id}/cancel")
+    assert ack.status_code == 200
+    assert ack.json()["cancelRequested"] is False
+    assert ack.json()["status"] == "done"  # a finished job is never demoted to cancelled
+
+
 def test_job_sse_streams_progress_then_closes(client: TestClient) -> None:
-    job_id = client.post("/jobs", json={"kind": "echo", "payload": {"steps": 2}}).json()["id"]
+    job_id = client.post("/api/v1/jobs", json={"kind": "echo", "payload": {"steps": 2}}).json()["id"]
     lines: list[str] = []
-    with client.stream("GET", f"/jobs/{job_id}/events") as r:
+    with client.stream("GET", f"/api/v1/jobs/{job_id}/events") as r:
         assert r.status_code == 200
         assert r.headers["content-type"].startswith("text/event-stream")
         lines = list(r.iter_lines())

@@ -13,18 +13,18 @@ from tests.conftest import TOKEN
 def test_dns_rebinding_bad_host_rejected(app: FastAPI) -> None:
     # A rebound domain reaches the local server but sends Host: evil.com — must be refused.
     evil = TestClient(app, base_url="http://evil.com", headers={HEADER: TOKEN})
-    assert evil.get("/status").status_code == 403
+    assert evil.get("/api/v1/status").status_code == 403
 
 
 def test_csrf_cross_site_origin_rejected(client: TestClient) -> None:
-    assert client.get("/status", headers={"Origin": "https://evil.com"}).status_code == 403
-    assert client.get("/status", headers={"Origin": "null"}).status_code == 403
-    assert client.get("/status", headers={"Origin": "http://localhost:8000"}).status_code == 200
+    assert client.get("/api/v1/status", headers={"Origin": "https://evil.com"}).status_code == 403
+    assert client.get("/api/v1/status", headers={"Origin": "null"}).status_code == 403
+    assert client.get("/api/v1/status", headers={"Origin": "http://localhost:8000"}).status_code == 200
 
 
 def test_missing_or_wrong_token_401(client: TestClient) -> None:
-    assert client.get("/status", headers={HEADER: "wrong"}).status_code == 401
-    assert client.get("/status", headers={HEADER: ""}).status_code == 401
+    assert client.get("/api/v1/status", headers={HEADER: "wrong"}).status_code == 401
+    assert client.get("/api/v1/status", headers={HEADER: ""}).status_code == 401
 
 
 def test_check_request_matrix() -> None:
@@ -43,4 +43,4 @@ def test_check_request_matrix() -> None:
 
 def test_launch_token_required_for_session(client: TestClient) -> None:
     # Override the default (valid) token header so only the bogus launch token is presented.
-    assert client.post("/session", headers={LAUNCH_HEADER: "nope", HEADER: ""}).status_code == 401
+    assert client.post("/api/v1/session", headers={LAUNCH_HEADER: "nope", HEADER: ""}).status_code == 401

@@ -1,19 +1,18 @@
-"""FastAPI application factory: security middleware, status, session (§11, §10.2)."""
+"""FastAPI application factory: security middleware, versioned router (§11, §10.2)."""
 
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
-from ..model import SCHEMA_VERSION
 from ..store import get_engine, init_db
 from ..vault import KeyringStore, SecretStore
 from .jobs import default_runner
 from .logging import configure_logging
-from .security import COOKIE, HEADER, LAUNCH_HEADER, SECURITY_HEADERS, SecurityConfig, check_request
+from .security import COOKIE, HEADER, SECURITY_HEADERS, SecurityConfig, check_request
 
 
 def create_app(
@@ -69,19 +68,8 @@ def create_app(
             response.headers[key] = value
         return response
 
-    @app.get("/status")
-    def status() -> dict[str, object]:
-        return {"schemaVersion": SCHEMA_VERSION, "state": "ok"}
-
-    @app.post("/session")
-    def session(request: Request, response: Response) -> dict[str, str]:
-        # Launch token == session token; this sets the SameSite=Strict cookie for browser flows.
-        if request.headers.get(LAUNCH_HEADER) != cfg.token and request.headers.get(HEADER) != cfg.token:
-            raise HTTPException(401, "invalid launch token")
-        response.set_cookie(COOKIE, cfg.token, samesite="strict", httponly=True, path="/")
-        return {"token": cfg.token}
-
     from .routes import router
 
+    # §11: all system endpoints are versioned under /api/v1 (M1 shipped them unprefixed).
     app.include_router(router)
     return app

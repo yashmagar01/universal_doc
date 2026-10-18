@@ -7,13 +7,13 @@ import json
 from collections.abc import AsyncIterator
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Response
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import IntegrityError
 
-from ..model import Document, Patch, Template, apply_patch, invert_patch, new_ulid
+from ..model import SCHEMA_VERSION, Document, Patch, Template, apply_patch, invert_patch, new_ulid
 from ..store import (
     append_op,
     get_document,
@@ -27,8 +27,10 @@ from ..store import (
 )
 from ..vault import SecretStore
 from .jobs import JobRunner
+from .security import COOKIE, HEADER, LAUNCH_HEADER
 
-router = APIRouter()
+# §11: every system endpoint lives under the versioned base path.
+router = APIRouter(prefix="/api/v1")
 
 
 class DocumentCreate(BaseModel):
@@ -77,6 +79,24 @@ def _instantiate(tpl: Template) -> Document:
     for slot in tpl.slots:
         doc.content.values[slot.id] = []
     return doc
+
+
+# --- system (§11) ---
+
+
+@router.get("/status")
+def status() -> dict[str, object]:
+    return {"schemaVersion": SCHEMA_VERSION, "state": "ok"}
+
+
+@router.post("/session")
+def session(request: Request, response: Response) -> dict[str, str]:
+    # Launch token == session token; this sets the SameSite=Strict cookie for browser flows.
+    cfg = request.app.state.cfg
+    if request.headers.get(LAUNCH_HEADER) != cfg.token and request.headers.get(HEADER) != cfg.token:
+        raise HTTPException(401, "invalid launch token")
+    response.set_cookie(COOKIE, cfg.token, samesite="strict", httponly=True, path="/")
+    return {"token": cfg.token}
 
 
 # --- templates ---
@@ -197,6 +217,15 @@ def jobs_get(job_id: str, request: Request) -> dict[str, Any]:
     if job is None:
         raise HTTPException(404, "job not found")
     return {"id": job.id, "kind": job.kind, "status": job.status, "error": job.error}
+
+
+@router.post("/jobs/{job_id}/cancel")
+def jobs_cancel(job_id: str, request: Request) -> dict[str, Any]:
+    """Signal a running job to stop (FR-ING-03); idempotent on an already-terminal job."""
+    job = _jobs(request).cancel(job_id)
+    if job is None:
+        raise HTTPException(404, "job not found")
+    return {"id": job.id, "status": job.status, "cancelRequested": job.cancel.is_set()}
 
 
 @router.get("/jobs/{job_id}/events")

@@ -5,10 +5,10 @@
     "version": "0.1.0"
   },
   "paths": {
-    "/status": {
+    "/api/v1/status": {
       "get": {
         "summary": "Status",
-        "operationId": "status_status_get",
+        "operationId": "status_api_v1_status_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -17,7 +17,7 @@
                 "schema": {
                   "additionalProperties": true,
                   "type": "object",
-                  "title": "Response Status Status Get"
+                  "title": "Response Status Api V1 Status Get"
                 }
               }
             }
@@ -25,10 +25,10 @@
         }
       }
     },
-    "/session": {
+    "/api/v1/session": {
       "post": {
         "summary": "Session",
-        "operationId": "session_session_post",
+        "operationId": "session_api_v1_session_post",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -39,7 +39,7 @@
                     "type": "string"
                   },
                   "type": "object",
-                  "title": "Response Session Session Post"
+                  "title": "Response Session Api V1 Session Post"
                 }
               }
             }
@@ -47,10 +47,10 @@
         }
       }
     },
-    "/templates": {
+    "/api/v1/templates": {
       "get": {
         "summary": "Templates List",
-        "operationId": "templates_list_templates_get",
+        "operationId": "templates_list_api_v1_templates_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -62,7 +62,7 @@
                     "type": "object"
                   },
                   "type": "array",
-                  "title": "Response Templates List Templates Get"
+                  "title": "Response Templates List Api V1 Templates Get"
                 }
               }
             }
@@ -71,7 +71,7 @@
       },
       "post": {
         "summary": "Templates Create",
-        "operationId": "templates_create_templates_post",
+        "operationId": "templates_create_api_v1_templates_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -90,7 +90,7 @@
                 "schema": {
                   "additionalProperties": true,
                   "type": "object",
-                  "title": "Response Templates Create Templates Post"
+                  "title": "Response Templates Create Api V1 Templates Post"
                 }
               }
             }
@@ -108,10 +108,10 @@
         }
       }
     },
-    "/templates/{tpl_id}": {
+    "/api/v1/templates/{tpl_id}": {
       "get": {
         "summary": "Templates Get",
-        "operationId": "templates_get_templates__tpl_id__get",
+        "operationId": "templates_get_api_v1_templates__tpl_id__get",
         "parameters": [
           {
             "name": "tpl_id",
@@ -147,7 +147,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Templates Get Templates  Tpl Id  Get"
+                  "title": "Response Templates Get Api V1 Templates  Tpl Id  Get"
                 }
               }
             }
@@ -165,10 +165,10 @@
         }
       }
     },
-    "/documents": {
+    "/api/v1/documents": {
       "get": {
         "summary": "Documents List",
-        "operationId": "documents_list_documents_get",
+        "operationId": "documents_list_api_v1_documents_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -180,7 +180,7 @@
                     "type": "object"
                   },
                   "type": "array",
-                  "title": "Response Documents List Documents Get"
+                  "title": "Response Documents List Api V1 Documents Get"
                 }
               }
             }
@@ -189,7 +189,7 @@
       },
       "post": {
         "summary": "Documents Create",
-        "operationId": "documents_create_documents_post",
+        "operationId": "documents_create_api_v1_documents_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -208,7 +208,7 @@
                 "schema": {
                   "additionalProperties": true,
                   "type": "object",
-                  "title": "Response Documents Create Documents Post"
+                  "title": "Response Documents Create Api V1 Documents Post"
                 }
               }
             }
@@ -226,10 +226,10 @@
         }
       }
     },
-    "/documents/{doc_id}": {
+    "/api/v1/documents/{doc_id}": {
       "get": {
         "summary": "Documents Get",
-        "operationId": "documents_get_documents__doc_id__get",
+        "operationId": "documents_get_api_v1_documents__doc_id__get",
         "parameters": [
           {
             "name": "doc_id",
@@ -249,7 +249,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Documents Get Documents  Doc Id  Get"
+                  "title": "Response Documents Get Api V1 Documents  Doc Id  Get"
                 }
               }
             }
@@ -267,11 +267,11 @@
         }
       }
     },
-    "/documents/{doc_id}/ops": {
+    "/api/v1/documents/{doc_id}/ops": {
       "post": {
         "summary": "Documents Ops",
         "description": "Apply a forward patch; persist it; return the new doc + the undo patch.",
-        "operationId": "documents_ops_documents__doc_id__ops_post",
+        "operationId": "documents_ops_api_v1_documents__doc_id__ops_post",
         "parameters": [
           {
             "name": "doc_id",
@@ -301,7 +301,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Documents Ops Documents  Doc Id  Ops Post"
+                  "title": "Response Documents Ops Api V1 Documents  Doc Id  Ops Post"
                 }
               }
             }
@@ -319,10 +319,10 @@
         }
       }
     },
-    "/jobs": {
+    "/api/v1/jobs": {
       "post": {
         "summary": "Jobs Create",
-        "operationId": "jobs_create_jobs_post",
+        "operationId": "jobs_create_api_v1_jobs_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -341,7 +341,7 @@
                 "schema": {
                   "additionalProperties": true,
                   "type": "object",
-                  "title": "Response Jobs Create Jobs Post"
+                  "title": "Response Jobs Create Api V1 Jobs Post"
                 }
               }
             }
@@ -359,10 +359,10 @@
         }
       }
     },
-    "/jobs/{job_id}": {
+    "/api/v1/jobs/{job_id}": {
       "get": {
         "summary": "Jobs Get",
-        "operationId": "jobs_get_jobs__job_id__get",
+        "operationId": "jobs_get_api_v1_jobs__job_id__get",
         "parameters": [
           {
             "name": "job_id",
@@ -382,7 +382,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Jobs Get Jobs  Job Id  Get"
+                  "title": "Response Jobs Get Api V1 Jobs  Job Id  Get"
                 }
               }
             }
@@ -400,11 +400,53 @@
         }
       }
     },
-    "/jobs/{job_id}/events": {
+    "/api/v1/jobs/{job_id}/cancel": {
+      "post": {
+        "summary": "Jobs Cancel",
+        "description": "Signal a running job to stop (FR-ING-03); idempotent on an already-terminal job.",
+        "operationId": "jobs_cancel_api_v1_jobs__job_id__cancel_post",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Jobs Cancel Api V1 Jobs  Job Id  Cancel Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jobs/{job_id}/events": {
       "get": {
         "summary": "Jobs Events",
         "description": "Server-Sent Events for a job: each progress event, then close on the terminal one.",
-        "operationId": "jobs_events_jobs__job_id__events_get",
+        "operationId": "jobs_events_api_v1_jobs__job_id__events_get",
         "parameters": [
           {
             "name": "job_id",
@@ -438,10 +480,10 @@
         }
       }
     },
-    "/providers/{name}/key": {
+    "/api/v1/providers/{name}/key": {
       "put": {
         "summary": "Provider Set Key",
-        "operationId": "provider_set_key_providers__name__key_put",
+        "operationId": "provider_set_key_api_v1_providers__name__key_put",
         "parameters": [
           {
             "name": "name",
@@ -471,7 +513,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Provider Set Key Providers  Name  Key Put"
+                  "title": "Response Provider Set Key Api V1 Providers  Name  Key Put"
                 }
               }
             }
@@ -490,7 +532,7 @@
       },
       "delete": {
         "summary": "Provider Delete Key",
-        "operationId": "provider_delete_key_providers__name__key_delete",
+        "operationId": "provider_delete_key_api_v1_providers__name__key_delete",
         "parameters": [
           {
             "name": "name",
@@ -510,7 +552,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Provider Delete Key Providers  Name  Key Delete"
+                  "title": "Response Provider Delete Key Api V1 Providers  Name  Key Delete"
                 }
               }
             }
@@ -528,10 +570,10 @@
         }
       }
     },
-    "/providers/{name}": {
+    "/api/v1/providers/{name}": {
       "get": {
         "summary": "Provider Get",
-        "operationId": "provider_get_providers__name__get",
+        "operationId": "provider_get_api_v1_providers__name__get",
         "parameters": [
           {
             "name": "name",
@@ -551,7 +593,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Provider Get Providers  Name  Get"
+                  "title": "Response Provider Get Api V1 Providers  Name  Get"
                 }
               }
             }

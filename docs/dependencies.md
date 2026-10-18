@@ -198,6 +198,8 @@ No analytics, crash reporting, update checks, or CDNs at runtime (D-026).
 | 2026-10-18 | `keyring` | OS keyvault for provider keys, server-side only (D-010, NFR-SEC-03) | MIT | spec §3 table (D-010) |
 | 2026-10-18 | `hypothesis` (dev) | Property tests for op apply/invert (NFR-TEST-05) | MPL-2.0 | NFR-TEST-05 acceptance |
 | 2026-10-18 | `httpx2` (dev) | starlette `TestClient` HTTP layer — required at runtime and type-check time for API tests | BSD-3-Clause | test tooling — confirm with Yash (M1 report) |
+| 2026-10-18 | `python-multipart` | Multipart parsing for `POST /templates/ingest` (FR-ING-01) | Apache-2.0 | spec §3 table (M2) |
+| 2026-10-18 | `pymupdf` | `NativeExtractor` adapter: extraction + 150 dpi reference raster (D-007) | **AGPL-3.0** / commercial | spec §3 table (D-007) — provisional; licence flagged in the M2 report |
 
 Planned-but-not-taken in M1 (stdlib kept them out): `sse-starlette` (plain `StreamingResponse` SSE),
 `structlog` (stdlib `logging` + JSON formatter), `jsonpatch` (own apply/invert), `python-ulid` (uuid),

@@ -1,21 +1,29 @@
-"""In-process job runner with SSE progress (§11; groundwork for the FR-ING-03 ingestion job).
+"""In-process job runner with SSE progress and cooperative cancel (§11, FR-ING-03).
 
-A handler is ``handler(payload, emit)``; each ``emit(event)`` appends a progress event the SSE
-stream delivers. The terminal event is ``{"status": "done"}`` (or ``{"status": "failed", ...}``).
+A handler is ``handler(payload, emit, cancel)``; each ``emit(event)`` appends a progress event the
+SSE stream delivers. Terminal states are ``done``, ``failed`` and ``cancelled``.
 
-ponytail: handlers run synchronously inside ``submit`` (M1 jobs are fast). Long M2 ingestion runs
-move to a background thread/process without changing this surface — the endpoints already read
-``job.events`` live, so streaming keeps working once execution is async.
+Handlers run on a daemon thread, so a long ingestion job never blocks the request that submitted
+it (D-032). ``cancel`` is a :class:`threading.Event` the handler polls — the runner marks the job
+cancelled once the handler returns.
+
+ponytail: plain dict/list mutation under the GIL, no locks; job state is a handful of atomic
+attribute writes read by a polling SSE loop. Replace with a queue+lock only if events ever race.
 """
 
 from __future__ import annotations
 
+import threading
+import time
 import uuid
 from collections.abc import Callable
 from typing import Any
 
 Emit = Callable[[dict[str, Any]], None]
-Handler = Callable[[dict[str, Any], Emit], None]
+Cancel = threading.Event
+Handler = Callable[[dict[str, Any], Emit, Cancel], None]
+
+TERMINAL = ("done", "failed", "cancelled")
 
 
 class Job:
@@ -26,10 +34,11 @@ class Job:
         self.status = "queued"
         self.events: list[dict[str, Any]] = []
         self.error: str | None = None
+        self.cancel = threading.Event()
 
     @property
     def terminal(self) -> bool:
-        return self.status in ("done", "failed")
+        return self.status in TERMINAL
 
 
 class JobRunner:
@@ -49,28 +58,56 @@ class JobRunner:
             raise KeyError(f"unknown job kind {kind!r}")
         job = Job(job_id=uuid.uuid4().hex, kind=kind, payload=payload or {})
         self._jobs[job.id] = job
+        threading.Thread(
+            target=self._run, args=(job, handler), name=f"job-{job.id[:8]}", daemon=True
+        ).start()
+        return job
+
+    def cancel(self, job_id: str) -> Job | None:
+        """Ask a running job to stop; returns the job, or ``None`` when unknown."""
+        job = self._jobs.get(job_id)
+        if job is None:
+            return None
+        if not job.terminal:
+            job.cancel.set()
+        return job
+
+    def _run(self, job: Job, handler: Handler) -> None:
         job.status = "running"
 
         def emit(event: dict[str, Any]) -> None:
             job.events.append(event)
 
         try:
-            handler(job.payload, emit)
+            handler(job.payload, emit, job.cancel)
         except Exception as exc:  # a failing job becomes a failed job, never a 500
-            job.status = "failed"
             job.error = str(exc)
-            job.events.append({"status": "failed", "error": str(exc)})
-            return job
-        job.status = "done"
-        job.events.append({"status": "done"})
-        return job
+            if job.cancel.is_set():  # interrupted teardown (killed worker) is a cancel, not a failure
+                self._finish(job, "cancelled", {"status": "cancelled", "reason": str(exc)})
+            else:
+                self._finish(job, "failed", {"status": "failed", "error": str(exc)})
+            return
+        if job.cancel.is_set():
+            self._finish(job, "cancelled", {"status": "cancelled"})
+        else:
+            self._finish(job, "done", {"status": "done"})
+
+    @staticmethod
+    def _finish(job: Job, status: str, event: dict[str, Any]) -> None:
+        job.status = status
+        job.events.append(event)
 
 
-def _demo_handler(payload: dict[str, Any], emit: Emit) -> None:
+def _demo_handler(payload: dict[str, Any], emit: Emit, cancel: Cancel) -> None:
     """Built-in ``echo`` job: emits deterministically so SSE can be exercised end-to-end."""
     steps = int(payload.get("steps", 3))
+    delay = float(payload.get("delay", 0))
     for i in range(1, steps + 1):
+        if cancel.is_set():
+            return
         emit({"progress": int(i * 100 / steps), "step": i})
+        if delay:
+            time.sleep(delay)
     if payload.get("fail"):
         raise RuntimeError("demo failure")
 

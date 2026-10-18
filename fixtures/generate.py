@@ -8,11 +8,16 @@ Fixtures are the sanctioned source of demo data (docs/decisions.md OQ-2). No rea
 
 from __future__ import annotations
 
+import io
 import json
+import struct
+import zlib
 from pathlib import Path
 
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib.units import inch
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 
 OUT = Path(__file__).resolve().parent / "generated"
@@ -40,13 +45,42 @@ def _footer(c: canvas.Canvas, page: int, pages: int, label: str) -> None:
 
 
 def _body(c: canvas.Canvas, x: float, y: float, width: float, lines: list[str], size: int = 10, leading: int = 13) -> float:
+    """Draw wrapped body copy inside `width` (column width — this is what keeps columns apart)."""
     c.setFont("Helvetica", size)
-    for line in lines:
-        if y < 60:
-            break
-        c.drawString(x, y, line)
-        y -= leading
+    for para in lines:
+        for line in _wrap(para, width, "Helvetica", size):
+            if y < 60:
+                return y
+            c.drawString(x, y, line)
+            y -= leading
     return y
+
+
+def _wrap(text: str, width: float, font: str, size: int) -> list[str]:
+    words, out, cur = text.split(), [], ""
+    for word in words:
+        trial = f"{cur} {word}".strip()
+        if stringWidth(trial, font, size) <= width:
+            cur = trial
+        else:
+            if cur:
+                out.append(cur)
+            cur = word
+    if cur:
+        out.append(cur)
+    return out
+
+
+def _png(width: int, height: int, rgb: tuple[int, int, int]) -> bytes:
+    """Minimal 8-bit RGB PNG encoder (stdlib only) — enough to embed raster images."""
+    raw = b"".join(b"\x00" + bytes(rgb) * width for _ in range(height))
+
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        body = kind + data
+        return struct.pack(">I", len(data)) + body + struct.pack(">I", zlib.crc32(body) & 0xFFFFFFFF)
+
+    header = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header) + chunk(b"IDAT", zlib.compress(raw)) + chunk(b"IEND", b"")
 
 
 LOREM = [
@@ -161,6 +195,40 @@ def orientation_3page(path: Path) -> dict:
     return {"file": path.name, "pages": pages, "kind": "flyer", "expectLayers": 15}
 
 
+def image_page(path: Path) -> dict:
+    """Two embedded rasters: one at 150 dpi (passes) and one at 8 dpi (fails the dpi validator)."""
+    c = canvas.Canvas(str(path), pagesize=LETTER)
+    c.setFont("Helvetica-Bold", 24)
+    c.drawString(48, H - 96, "Visual Appendix")
+    c.setFont("Helvetica", 10)
+    c.drawString(48, H - 120, "Figures below show the reference plate and its low-resolution thumbnail.")
+    hi = ImageReader(io.BytesIO(_png(300, 200, (30, 90, 160))))
+    c.drawImage(hi, 48, H - 380, width=144, height=96)  # 300 px / 144 pt = 150 dpi
+    c.setFont("Helvetica", 8)
+    c.drawString(48, H - 396, "Figure 1 - reference plate (150 dpi)")
+    lo = ImageReader(io.BytesIO(_png(16, 16, (200, 60, 60))))
+    c.drawImage(lo, 300, H - 380, width=144, height=144)  # 16 px / 144 pt = 8 dpi
+    c.drawString(300, H - 396, "Figure 2 - thumbnail (8 dpi)")
+    _footer(c, 1, 1, "Visual Appendix")
+    c.save()
+    return {"file": path.name, "pages": 1, "kind": "images", "expectLayers": 8}
+
+
+def malformed_pdf(path: Path) -> dict:
+    """Valid magic bytes, no parseable objects — must fail cleanly, never crash the server."""
+    path.write_bytes(b"%PDF-1.4\n" + b"\xff" * 64 + b"1 0 obj\n<< /Type /Catalog\nendobj\n")
+    return {"file": path.name, "pages": 0, "kind": "malformed", "expectError": "corrupt"}
+
+
+def encrypted_pdf(path: Path) -> dict:
+    """Password-protected PDF — rejected with a clear message (FR-ING-01)."""
+    c = canvas.Canvas(str(path), encrypt="fixture-secret")
+    c.setFont("Helvetica", 12)
+    c.drawString(72, 720, "This document is password protected.")
+    c.save()
+    return {"file": path.name, "pages": 1, "kind": "encrypted", "expectError": "encrypted"}
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = [
@@ -168,6 +236,9 @@ def main() -> None:
         report_6page(OUT / "report_6page.pdf"),
         exec_weekly_1page(OUT / "exec_weekly_1page.pdf"),
         orientation_3page(OUT / "orientation_3page.pdf"),
+        image_page(OUT / "image_page.pdf"),
+        malformed_pdf(OUT / "malformed.pdf"),
+        encrypted_pdf(OUT / "encrypted.pdf"),
     ]
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(f"Wrote {len(manifest)} fixture PDFs to {OUT}")

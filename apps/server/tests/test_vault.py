@@ -22,29 +22,33 @@ def test_memory_store_roundtrip() -> None:
 
 
 def test_provider_key_is_write_only(client: TestClient) -> None:
-    set_r = client.put("/providers/fake/key", json={"key": FULL_KEY})
+    set_r = client.put("/api/v1/providers/fake/key", json={"key": FULL_KEY})
     assert set_r.status_code == 200
     assert set_r.json() == {"provider": "fake", "configured": True}  # key never echoed back
     assert FULL_KEY not in set_r.text
 
-    got = client.get("/providers/fake")
+    got = client.get("/api/v1/providers/fake")
     assert got.status_code == 200
     body = got.json()
     assert body["configured"] is True
     assert str(body["hint"]).endswith("1234")  # only a masked tail leaves the server
     assert FULL_KEY not in got.text
 
-    gone = client.delete("/providers/fake/key")
+    gone = client.delete("/api/v1/providers/fake/key")
     assert gone.json()["configured"] is False
-    assert client.get("/providers/fake").json()["configured"] is False
+    assert client.get("/api/v1/providers/fake").json()["configured"] is False
 
 
 def test_provider_unconfigured_has_no_hint(client: TestClient) -> None:
-    assert client.get("/providers/nope").json() == {"provider": "nope", "configured": False, "hint": None}
+    assert client.get("/api/v1/providers/nope").json() == {
+        "provider": "nope",
+        "configured": False,
+        "hint": None,
+    }
 
 
 def test_provider_rejects_empty_key(client: TestClient) -> None:
-    assert client.put("/providers/fake/key", json={"key": ""}).status_code == 422
+    assert client.put("/api/v1/providers/fake/key", json={"key": ""}).status_code == 422
 
 
 def test_fake_provider_reads_vault_and_is_offline() -> None:

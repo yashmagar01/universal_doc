@@ -136,6 +136,15 @@ class Provenance(StrictModel):
     engine: str | None = None
 
 
+class FontResolution(StrictModel):
+    """D-018 cascade result for one node's font. `resolved=None` means nothing matched (review item)."""
+
+    requested: str
+    resolved: str | None = None
+    source: FontSource | None = None
+    certainty: float = Field(default=1.0, ge=0.0, le=1.0)
+
+
 # --- Nodes (§5.3) ---
 
 
@@ -164,6 +173,9 @@ class Node(StrictModel):
     fit: Fit | None = None
     align: Literal["left", "center", "right", "justify"] | None = None
     columns: int | None = None
+    columnGap: float | None = None
+    columnRule: bool | None = None
+    fontResolution: FontResolution | None = None
     # image
     assetId: str | None = None
     crop: BBox | None = None

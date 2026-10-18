@@ -48,7 +48,7 @@ architecture sections are `§` in `system-architecture.md`.
 | D-029 | Local models (Ollama etc.) arrive later through the OpenAI-compatible adapter | Deferred |
 | D-030 | Hosted OCR services (including ocr.z.ai) are not used | Accepted |
 | D-031 | TS types are rendered from JSON Schema by the Python generator, not `openapi-typescript` | Proposed |
-| D-032 | Job handlers run inline in M1; background execution lands with M2 | Proposed |
+| D-032 | Job handlers run inline in M1; background execution lands with M2 | Accepted |
 
 ---
 
@@ -329,18 +329,20 @@ tested code for no behavioural change), hand-written TS (drift — the problem D
 **Consequences.** If `openapi-typescript`-specific output is ever wanted, the committed
 `schema/openapi.json` can feed it directly. Supersede this entry to switch back.
 
-## D-032 — Job handlers run inline in M1
-**Status:** Proposed
+## D-032 — Job handlers run inline in M1; background execution lands with M2
+**Status:** Accepted
 **Context.** D-014 targets in-process `asyncio` jobs with a `ProcessPoolExecutor`. The only M1 handler is the
-deterministic `echo` job, which completes inside the request that submits it.
-**Decision.** `JobRunner` executes handlers inline and records progress events; `GET /jobs/{id}/events`
-streams the recorded events over SSE and closes. The public surface (`register` / `submit` / `get` + event
-list) is what M2's ingestion jobs use unchanged — background execution then becomes a change inside
-`JobRunner` alone.
-**Alternatives rejected.** Shipping asyncio/process-pool execution now, with no long-running job to exercise
-it (untested machinery).
-**Consequences.** A handler that runs long enough would block the event loop; none exists before M2, which
-must move execution off the request path first thing. Flagged in the M1 report.
+deterministic `echo` job, which completed inside the request that submitted it.
+**Decision.** M1 ran handlers inline (see the M1 record below). Since M2, `JobRunner.submit` starts a daemon
+thread per job: handlers never block the request, `POST /jobs/{id}/cancel` sets a `threading.Event` the
+handler polls (FR-ING-03: stop within 2 s), and the job ends `done`, `failed` or `cancelled`. The public
+surface (`register` / `submit` / `get` + event list) is unchanged — SSE reads the same live event list.
+**Alternatives rejected.** `ProcessPoolExecutor` (the ingestion work already runs in its own sandboxed
+subprocess — D-034; a pool would add a second process layer for no gain), `asyncio` tasks (handlers are
+blocking native/Python work, not I/O; threads keep the runner synchronous and testable).
+**Consequences.** Handlers must poll `cancel` cooperatively and touch only thread-local state — the DB
+connection is opened per `transaction()` inside the handler. Job state relies on the GIL for its attribute
+writes (no lock); revisit only if event ordering ever races.
 
 ---
 
