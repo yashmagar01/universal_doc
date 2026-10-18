@@ -1,0 +1,31 @@
+[project]
+name = "templix-server"
+version = "0.1.0"
+description = "Templix local API server (parser, storage, providers) — M1+"
+readme = "README.md"
+license = { text = "AGPL-3.0-or-later" }
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.14",
+    "pyright>=1.1.405",
+    "pytest>=8.4",
+    "reportlab>=4.4",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pyright]
+pythonVersion = "3.13"
+typeCheckingMode = "strict"
+include = ["templix", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

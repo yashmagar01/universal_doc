@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+.venv/
+__pycache__/
+*.pyc
+playwright-report/
+test-results/
+artifacts/parity/
+fixtures/generated/
+fixtures/private/
+.env
+*.log
+.uv/
+.bench/

@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-canvas: #f3f2ef;
+  --color-card: #ffffff;
+  --color-border: #e0dfdc;
+  --color-border-strong: #cdcac5;
+  --color-divider: #ebeae7;
+  --color-search-bg: #edf3f8;
+  --color-ink: #191919;
+  --color-ink-2: #666666;
+  --color-ink-disabled: #a0a09e;
+  --color-brand: #0a66c2;
+  --color-brand-hover: #004182;
+  --color-brand-tint: #ebf4fd;
+  --color-success: #057642;
+  --color-success-bg: #e6f4ea;
+  --color-warning: #b24020;
+  --color-warning-bg: #fdf2e9;
+  --color-error: #cc1016;
+  --color-error-bg: #fce8e6;
+  --color-ov-heading: #0a66c2;
+  --color-ov-text: #057642;
+  --color-ov-media: #0e7c86;
+  --color-ov-shape: #666666;
+  --color-ov-review: #b24020;
+  /* compatibility set (design.md §2.1) — reference names, components use semantic tokens */
+  --color-primary: #004e99;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #0a66c2;
+  --color-on-primary-container: #dbe6ff;
+  --color-primary-fixed: #d6e3ff;
+  --color-inverse-primary: #a8c8ff;
+  --color-secondary: #565f67;
+  --color-secondary-container: #d8e1ea;
+  --color-tertiary: #005b31;
+  --color-tertiary-container: #057642;
+  --color-error-m3: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-surface: #faf9f6;
+  --color-surface-container-low: #f4f3f0;
+  --color-surface-container: #efeeeb;
+  --color-surface-container-high: #e9e8e5;
+  --color-surface-container-highest: #e3e2df;
+  --color-outline: #727783;
+  --color-outline-variant: #c1c6d4;
+  --color-on-surface-variant: #414752;
+  --color-scrim: rgba(0, 0, 0, 0.6);
+
+  --radius-input: 0.25rem;
+  --radius-card: 0.5rem;
+  --radius-pill: 9999px;
+
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-sm: 1rem;
+
+  --shadow-l1: 0 0 0 1px #e0dfdc, 0 1px 3px rgb(0 0 0 / 0.08);
+  --shadow-l2: 0 0 0 1px #cdcac5, 0 4px 12px rgb(0 0 0 / 0.12);
+  --shadow-l3: 0 0 0 1px #e0dfdc, 0 8px 24px rgb(0 0 0 / 0.15);
+
+  --text-headline-xl: 1.5rem;
+  --text-headline-xl--line-height: 2rem;
+  --text-headline-lg: 1.25rem;
+  --text-headline-lg--line-height: 1.75rem;
+  --text-headline-md: 1rem;
+  --text-headline-md--line-height: 1.5rem;
+  --text-body-lg: 0.9375rem;
+  --text-body-lg--line-height: 1.375rem;
+  --text-body-md: 0.875rem;
+  --text-body-md--line-height: 1.25rem;
+  --text-body-sm: 0.75rem;
+  --text-body-sm--line-height: 1rem;
+  --text-label-sm: 0.6875rem;
+  --text-label-sm--line-height: 0.875rem;
+}
+
+/* weight + tracking pairs (portable across v4 minors) */
+@utility text-headline-xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+@utility text-headline-lg {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+@utility text-headline-md {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+@utility text-label-lg {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+}
+@utility text-label-md {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+}
+@utility text-label-sm {
+  font-size: 0.6875rem;
+  line-height: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font: 400 0.875rem/1.25rem var(--font-sans);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}

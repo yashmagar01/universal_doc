@@ -1,0 +1,11 @@
+@import "@fontsource-variable/inter";
+@import "material-symbols/outlined.css";
+@import "@templix/ui/theme.css";
+
+@source "../../../packages/ui/src";
+@source "../../../packages/render-core/src";
+@source "../../../packages/rules/src";
+
+.material-symbols-outlined {
+  display: inline-block;
+}

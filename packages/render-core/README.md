@@ -1,0 +1,1 @@
+# @templix/render-core placeholder
