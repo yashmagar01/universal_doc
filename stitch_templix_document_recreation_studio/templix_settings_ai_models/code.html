@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Templix - AI Models &amp; Local AI Settings</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Inter Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed": "#00210e",
+            "on-background": "#1b1c1a",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-primary-fixed": "#001b3d",
+            "error": "#ba1a1a",
+            "surface-dim": "#dbdad7",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#5b646b",
+            "inverse-primary": "#a8c8ff",
+            "surface-container": "#efeeeb",
+            "on-primary-fixed-variant": "#00468a",
+            "primary": "#004e99",
+            "on-primary": "#ffffff",
+            "surface-tint": "#005eb5",
+            "on-error-container": "#93000a",
+            "primary-fixed": "#d6e3ff",
+            "error-container": "#ffdad6",
+            "on-secondary": "#ffffff",
+            "inverse-on-surface": "#f2f1ee",
+            "background": "#faf9f6",
+            "on-surface-variant": "#414752",
+            "outline": "#727783",
+            "secondary": "#565f67",
+            "on-secondary-fixed-variant": "#3f484f",
+            "tertiary": "#005b31",
+            "surface-container-low": "#f4f3f0",
+            "surface-container-highest": "#e3e2df",
+            "on-primary-container": "#dbe6ff",
+            "surface-bright": "#faf9f6",
+            "on-secondary-fixed": "#141d23",
+            "secondary-fixed": "#dbe4ec",
+            "surface-container-high": "#e9e8e5",
+            "surface": "#faf9f6",
+            "primary-fixed-dim": "#a8c8ff",
+            "on-tertiary-container": "#9afab9",
+            "primary-container": "#0a66c2",
+            "secondary-container": "#d8e1ea",
+            "inverse-surface": "#2f312f",
+            "tertiary-fixed-dim": "#7cda9b",
+            "surface-variant": "#e3e2df",
+            "on-tertiary-fixed-variant": "#00522c",
+            "secondary-fixed-dim": "#bec8d0",
+            "on-surface": "#1b1c1a",
+            "outline-variant": "#c1c6d4",
+            "tertiary-fixed": "#97f7b6",
+            "tertiary-container": "#057642"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter-sm": "1rem",
+            "gutter": "1.5rem",
+            "margin": "1.5rem",
+            "margin-mobile": "0.75rem",
+            "space-xl": "2rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "label-md": ["Inter"],
+            "label-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-xl": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-md": ["Inter"],
+            "body-md": ["Inter"]
+          },
+          "fontSize": {
+            "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-lg": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-xl": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-lg": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "headline-md": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 20px;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1;
+    }
+    /* Subtle 1px crisp card shadows matching LinkedIn-style token */
+    .card-elevation-1 {
+      box-shadow: 0px 0px 0px 1px #E0DFDC, 0px 1px 3px rgba(0, 0, 0, 0.08);
+    }
+    .card-elevation-hover:hover {
+      box-shadow: 0px 0px 0px 1px #CDCAC5, 0px 4px 12px rgba(0, 0, 0, 0.12);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col font-body-md text-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- ========================================== -->
+<!-- Top Navigation Bar (Shared Component JSON) -->
+<!-- ========================================== -->
+<header class="bg-surface-container-lowest dark:bg-surface border-b border-surface-variant dark:border-outline-variant shadow-sm dark:shadow-none docked full-width top-0 fixed z-50 h-14">
+<div class="w-full max-w-[1128px] mx-auto px-6 flex items-center justify-between h-14">
+<!-- Brand & Global Search -->
+<div class="flex items-center gap-4">
+<!-- Logo -->
+<a class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary flex items-center gap-2 tracking-tight" href="#">
+<span class="material-symbols-outlined text-primary-container text-2xl" data-weight="fill" style="font-variation-settings: 'FILL' 1;">layers</span>
+<span>Templix</span>
+<span class="bg-tertiary-container/10 text-tertiary-container font-label-sm text-label-sm px-1.5 py-0.5 rounded uppercase tracking-wider font-bold">LOCAL</span>
+</a>
+<!-- Search Bar (on_left) -->
+<div class="relative hidden sm:block w-64 md:w-72">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-lg">search</span>
+</div>
+<input class="w-full h-[34px] pl-9 pr-3 text-body-sm font-body-sm bg-[#EDF3F8] dark:bg-surface-container-high border-0 rounded text-on-surface placeholder-secondary focus:ring-2 focus:ring-primary-container focus:bg-surface-container-lowest transition-all" placeholder="Search templates, docs, settings..." type="text"/>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center h-full space-x-1">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:text-on-surface dark:hover:text-inverse-on-surface h-full px-3 transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-105 transition-transform">home</span>
+<span class="text-label-sm font-label-sm mt-0.5">Home</span>
+</a>
+<!-- Templates -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:text-on-surface dark:hover:text-inverse-on-surface h-full px-3 transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-105 transition-transform">dashboard_customize</span>
+<span class="text-label-sm font-label-sm mt-0.5">Templates</span>
+</a>
+<!-- Documents -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:text-on-surface dark:hover:text-inverse-on-surface h-full px-3 transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-105 transition-transform">description</span>
+<span class="text-label-sm font-label-sm mt-0.5">Documents</span>
+</a>
+<!-- Models & Local AI (ACTIVE per Hierarchy) -->
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-inverse-on-surface border-b-2 border-primary-container text-primary-container dark:text-primary-fixed font-semibold h-full px-3" href="#">
+<span class="material-symbols-outlined text-xl text-primary-container" style="font-variation-settings: 'FILL' 1;">neurology</span>
+<span class="text-label-sm font-label-sm mt-0.5">Models &amp; Local AI</span>
+</a>
+<!-- Help & Privacy -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:text-on-surface dark:hover:text-inverse-on-surface h-full px-3 transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-105 transition-transform">shield_person</span>
+<span class="text-label-sm font-label-sm mt-0.5">Help &amp; Privacy</span>
+</a>
+</nav>
+<!-- Trailing Action: Notifications & Profile -->
+<div class="flex items-center gap-3">
+<!-- Notification button -->
+<button class="relative w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors" title="Notifications">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary-container rounded-full ring-2 ring-surface-container-lowest"></span>
+</button>
+<div class="h-6 w-[1px] bg-surface-variant mx-1"></div>
+<!-- User profile snippet -->
+<button class="flex items-center gap-2 p-1 rounded-full hover:bg-surface-container-low transition-colors text-left group">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-primary-container flex items-center justify-center font-label-md font-bold text-xs ring-1 ring-surface-variant overflow-hidden">
+<span class="tracking-tighter">SL</span>
+</div>
+<div class="hidden lg:flex flex-col text-left pr-1 leading-tight">
+<span class="text-label-sm font-label-sm text-on-surface font-semibold group-hover:text-primary-container transition-colors">Sarah Lin</span>
+<span class="text-[10px] text-secondary font-normal">Editor</span>
+</div>
+<span class="material-symbols-outlined text-sm text-secondary">arrow_drop_down</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- Main Workspace / Container                -->
+<!-- ========================================== -->
+<main class="flex-1 w-full max-w-[1128px] mx-auto px-6 pt-20 pb-16">
+<!-- Top Breadcrumb/Context Header -->
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-secondary">
+<a class="hover:text-primary-container transition-colors" href="#">Settings</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-on-surface font-semibold">AI Models &amp; Inference</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-[#E6F4EA] text-[#057642]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#057642]"></span>
+          Local Engine Connected
+        </span>
+</div>
+</div>
+<!-- 2-Column Desktop Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+<!-- ========================================== -->
+<!-- Left Vertical Menu / Sidebar Navigation    -->
+<!-- ========================================== -->
+<aside class="md:col-span-4 lg:col-span-3 space-y-4">
+<div class="bg-surface-container-lowest rounded-lg card-elevation-1 overflow-hidden">
+<!-- Sidebar Header -->
+<div class="p-4 border-b border-[#E0DFDC]">
+<h2 class="text-headline-md font-headline-md text-on-surface">Configuration</h2>
+<p class="text-body-sm font-body-sm text-secondary mt-0.5">Manage engine preferences</p>
+</div>
+<!-- Vertical Tabs Navigation -->
+<nav class="py-2">
+<!-- Tab: General -->
+<a class="flex items-center gap-3 px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-on-surface text-lg">tune</span>
+<span>General</span>
+</a>
+<!-- Tab: AI Models (ACTIVE) -->
+<a class="flex items-center justify-between px-4 py-2.5 bg-[#EBF4FD] text-primary-container font-label-md text-label-md border-l-4 border-primary-container transition-colors" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg" style="font-variation-settings: 'FILL' 1;">neurology</span>
+<span class="font-semibold">AI Models</span>
+</div>
+<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-primary-container text-white">4</span>
+</a>
+<!-- Tab: Fonts -->
+<a class="flex items-center gap-3 px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-on-surface text-lg">font_download</span>
+<span>Fonts</span>
+</a>
+<!-- Tab: Privacy -->
+<a class="flex items-center gap-3 px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-secondary group-hover:text-on-surface text-lg">verified_user</span>
+<span>Privacy</span>
+</a>
+</nav>
+<!-- Sidebar Local Storage / Node Status Card Footer -->
+<div class="p-4 bg-[#FAF9F6] border-t border-[#E0DFDC] space-y-2.5">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-secondary font-medium">Local Runtime</span>
+<span class="text-[#057642] font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#057642]"></span>
+                Ollama Active
+              </span>
+</div>
+<!-- Storage & Memory Meter -->
+<div class="w-full bg-[#E0DFDC] h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 24%"></div>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-secondary pt-0.5">
+<span>RAM Allocation</span>
+<span class="font-semibold text-on-surface">218 MB / 8 GB</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-secondary">
+<span>Model Cache</span>
+<span class="font-semibold text-on-surface">4.7 GB SSD</span>
+</div>
+<div class="pt-2">
+<button class="w-full text-center py-1.5 text-label-sm font-label-sm text-primary-container hover:bg-[#EBF4FD] rounded border border-primary-container/30 transition-colors">
+                Purge Offline Cache
+              </button>
+</div>
+</div>
+</div>
+<!-- Privacy Shield Mini-Banner -->
+<div class="bg-surface-container-lowest rounded-lg p-4 card-elevation-1 border-l-4 border-[#057642]">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-[#057642] text-xl">gavel</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">FERPA / Student Privacy</p>
+<p class="text-body-sm font-body-sm text-secondary mt-1">
+                Zero document text or OCR scans leave this device when local model is active.
+              </p>
+</div>
+</div>
+</div>
+</aside>
+<!-- ========================================== -->
+<!-- Right Main Settings Panel (AI Models)     -->
+<!-- ========================================== -->
+<section class="md:col-span-8 lg:col-span-9 space-y-6">
+<!-- Header Area Card -->
+<div class="bg-surface-container-lowest rounded-lg p-6 card-elevation-1">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div>
+<h1 class="text-headline-xl font-headline-xl text-on-surface">AI Models &amp; Inference Settings</h1>
+<p class="text-body-md font-body-md text-secondary mt-1 max-w-2xl">
+                Configure local offline models or bring your own cloud API keys for document recreation, column auto-alignment, and AI Assist drafting.
+              </p>
+</div>
+<div class="flex-shrink-0">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-label-md font-label-md bg-[#E6F4EA] text-[#057642] border border-[#057642]/20">
+<span class="material-symbols-outlined text-base">lock</span>
+                Local-first default enabled
+              </span>
+</div>
+</div>
+<!-- Prominent Top Info Notice Box -->
+<div class="mt-6 p-4 rounded-lg bg-[#EBF4FD] border border-[#0A66C2]/30 flex items-start gap-3.5">
+<span class="material-symbols-outlined text-[#0A66C2] text-2xl flex-shrink-0 mt-0.5">info</span>
+<div class="space-y-1">
+<h3 class="font-label-lg text-label-lg text-on-surface">Model Architecture &amp; Privacy Boundary</h3>
+<p class="text-body-sm font-body-sm text-[#414752] leading-relaxed">
+<strong class="text-on-surface font-semibold">Local models (Ollama, LM Studio)</strong> run 100% on-device via localhost, ensuring complete student publication privacy, offline resilience, and zero cloud transmission. 
+                <strong class="text-on-surface font-semibold">Cloud models (OpenAI, Anthropic, Google)</strong> require an internet connection and transmit extracted document text to third-party provider APIs.
+              </p>
+</div>
+</div>
+</div>
+<!-- AI Provider Stack -->
+<div class="space-y-4">
+<!-- Card 1: Ollama / Local Models (Featured / Active Default Card) -->
+<div class="bg-surface-container-lowest rounded-lg card-elevation-1 border-2 border-primary-container relative overflow-hidden transition-all">
+<!-- Active Flag Accent Ribbon -->
+<div class="bg-primary-container text-white px-4 py-1 text-[11px] font-bold tracking-wide uppercase flex items-center justify-between">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm">stars</span>
+                Primary Active Engine
+              </span>
+<span>Offline Ready</span>
+</div>
+<div class="p-6">
+<!-- Top Row: Icon, Titles, Badges -->
+<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+<div class="flex items-start gap-3.5">
+<div class="w-11 h-11 rounded-lg bg-[#FAF9F6] border border-[#E0DFDC] flex items-center justify-center text-primary-container flex-shrink-0">
+<span class="material-symbols-outlined text-2xl">memory</span>
+</div>
+<div>
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="text-headline-md font-headline-md text-on-surface">Ollama / Local Models</h3>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-[#E6F4EA] text-[#057642] font-semibold">
+<span class="material-symbols-outlined text-xs">shield</span>
+                        Recommended for Privacy
+                      </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-[#EBF4FD] text-primary-container font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+                        Active Engine
+                      </span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary mt-1">
+                      Run open-weight models directly on your hardware without internet or API fees. Fully private.
+                    </p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-[#057642] font-semibold bg-[#E6F4EA] px-2.5 py-1 rounded">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                    Connected (12ms)
+                  </span>
+</div>
+</div>
+<!-- Input Fields Grid -->
+<div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Endpoint URL -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5">
+                    Local Server Endpoint
+                  </label>
+<div class="relative">
+<input class="w-full h-9 px-3 bg-surface-container-lowest border border-[#666666] rounded font-mono text-body-sm text-on-surface focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all" type="text" value="http://localhost:11434"/>
+<span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-secondary text-xs font-mono">
+                      v0.1.32
+                    </span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary mt-1">Standard local Ollama daemon port</p>
+</div>
+<!-- Model Selector -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5">
+                    Selected Model
+                  </label>
+<div class="relative">
+<select class="w-full h-9 pl-3 pr-8 bg-surface-container-lowest border border-[#666666] rounded text-body-sm font-body-sm text-on-surface focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all">
+<option selected="">llama3:8b (4.7 GB · Q4_K_M) - Ready</option>
+<option>mistral:7b-instruct-v0.2 (4.1 GB)</option>
+<option>phi-3:mini (2.3 GB · Lightweight)</option>
+<option>codellama:7b (Text/Markup Extraction)</option>
+</select>
+</div>
+<p class="text-body-sm font-body-sm text-secondary mt-1">Quantized for optimal balanced CPU/GPU inference</p>
+</div>
+</div>
+<!-- Extra parameter controls preview -->
+<div class="mt-4 p-3 bg-surface-container-low rounded border border-[#E0DFDC] flex flex-wrap items-center justify-between gap-3 text-body-sm font-body-sm">
+<div class="flex items-center gap-4 text-secondary">
+<span>Context window: <strong class="text-on-surface font-semibold">8,192 tokens</strong></span>
+<span>•</span>
+<span>Temperature: <strong class="text-on-surface font-semibold">0.20</strong></span>
+<span>•</span>
+<span>Threads: <strong class="text-on-surface font-semibold">8 cores</strong></span>
+</div>
+<button class="text-primary-container hover:underline font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">settings_suggest</span>
+                  Configure Parameters
+                </button>
+</div>
+<!-- Action Bar for Card 1 -->
+<div class="mt-5 pt-4 border-t border-[#EBEAE7] flex items-center justify-between">
+<div class="flex items-center gap-2 text-secondary text-body-sm font-body-sm">
+<span class="material-symbols-outlined text-[#057642] text-sm">sync</span>
+<span>Daemon active on pid 18420</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="rounded-full border border-primary-container px-4 py-1.5 text-label-lg font-label-lg text-primary-container hover:bg-[#EBF4FD] transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base">refresh</span>
+                    Test connection
+                  </button>
+<button class="rounded-full bg-primary-container px-4 py-1.5 text-label-lg font-label-lg text-white hover:bg-primary transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base">done</span>
+                    Active Engine
+                  </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: OpenAI -->
+<div class="bg-surface-container-lowest rounded-lg card-elevation-1 p-6 card-elevation-hover transition-all">
+<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+<div class="flex items-start gap-3.5">
+<div class="w-11 h-11 rounded-lg bg-[#FAF9F6] border border-[#E0DFDC] flex items-center justify-center text-on-surface flex-shrink-0 font-bold text-base">
+<span class="material-symbols-outlined text-2xl text-secondary">smart_toy</span>
+</div>
+<div>
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="text-headline-md font-headline-md text-on-surface">OpenAI</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-high text-secondary">
+                      Cloud API
+                    </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-high text-secondary font-medium">
+                      Not Configured
+                    </span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary mt-1">
+                    Connect GPT-4o or GPT-4o-mini for high-speed editorial rewriting and structured JSON extraction.
+                  </p>
+</div>
+</div>
+</div>
+<!-- Input Fields Grid -->
+<div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- API Key Field -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5">
+                  OpenAI API Key
+                </label>
+<div class="relative">
+<input class="w-full h-9 px-3 pr-10 bg-surface-container-lowest border border-[#666666] rounded font-mono text-body-sm text-on-surface focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all" placeholder="sk-proj-••••••••••••••••••••••••" type="password" value=""/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-secondary hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+</div>
+<p class="text-body-sm font-body-sm text-secondary mt-1">Key is encrypted locally in browser IndexedDB</p>
+</div>
+<!-- Model Selector -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5">
+                  Model Deployment
+                </label>
+<select class="w-full h-9 pl-3 pr-8 bg-surface-container-lowest border border-[#666666] rounded text-body-sm font-body-sm text-on-surface focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all">
+<option selected="">gpt-4o (Omni multimodal)</option>
+<option>gpt-4o-mini (Faster, cost-effective)</option>
+<option>gpt-4-turbo</option>
+</select>
+<p class="text-body-sm font-body-sm text-secondary mt-1">Recommended for high volume document reconstruction</p>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="mt-5 pt-4 border-t border-[#EBEAE7] flex items-center justify-between">
+<span class="text-body-sm font-body-sm text-secondary">Requires active OpenAI developer credit balance</span>
+<div class="flex items-center gap-3">
+<button class="rounded-full border border-primary-container px-4 py-1.5 text-label-lg font-label-lg text-primary-container hover:bg-[#EBF4FD] transition-colors">
+                  Test connection
+                </button>
+<button class="rounded-full bg-surface-container-high px-4 py-1.5 text-label-lg font-label-lg text-secondary hover:bg-secondary-container hover:text-on-secondary-container transition-colors">
+                  Save Key
+                </button>
+</div>
+</div>
+</div>
+<!-- Card 3: Anthropic -->
+<div class="bg-surface-container-lowest rounded-lg card-elevation-1 p-6 card-elevation-hover transition-all">
+<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+<div class="flex items-start gap-3.5">
+<div class="w-11 h-11 rounded-lg bg-[#FAF9F6] border border-[#E0DFDC] flex items-center justify-center text-on-surface flex-shrink-0">
+<span class="material-symbols-outlined text-2xl text-[#0A66C2]">psychology</span>
+</div>
+<div>
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="text-headline-md font-headline-md text-on-surface">Anthropic</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-high text-secondary">
+                      Cloud API
+                    </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-[#E6F4EA] text-[#057642] font-semibold">
+<span class="material-symbols-outlined text-xs">check_circle</span>
+                      Connected
+                    </span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary mt-1">
+                    Use Claude 3.5 Sonnet for nuanced long-form editorial copy fitting and complex column balance.
+                  </p>
+</div>
+</div>
+<div>
+<span class="inline-flex items-center gap-1.5 text-label-sm font-label-sm text-[#057642] font-medium bg-[#E6F4EA] px-2.5 py-1 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-[#057642]"></span>
+                  Valid Key · Balance Active
+                </span>
+</div>
+</div>
+<!-- Input Fields Grid -->
+<div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- API Key Field -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5">
+                  Anthropic API Key
+                </label>
+<div class="relative">
+<input class="w-full h-9 px-3 pr-10 bg-surface-container-lowest border border-[#666666] rounded font-mono text-body-sm text-on-surface focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all" type="password" value="sk-ant-api03-91823901238910283019283"/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-secondary hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-lg">visibility_off</span>
+</button>
+</div>
+<p class="text-body-sm font-body-sm text-[#057642] mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">verified</span>
+                  Authentication verified 2 hours ago
+                </p>
+</div>
+<!-- Model Selector -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5">
+                  Model Variant
+                </label>
+<select class="w-full h-9 pl-3 pr-8 bg-surface-container-lowest border border-[#666666] rounded text-body-sm font-body-sm text-on-surface focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all">
+<option selected="">claude-3-5-sonnet-20241022 (Preferred)</option>
+<option>claude-3-haiku-20240307 (Fast drafting)</option>
+<option>claude-3-opus-20240229</option>
+</select>
+<p class="text-body-sm font-body-sm text-secondary mt-1">200K context window enabled</p>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="mt-5 pt-4 border-t border-[#EBEAE7] flex items-center justify-between">
+<span class="text-body-sm font-body-sm text-secondary">Usage this billing cycle: $1.42</span>
+<div class="flex items-center gap-3">
+<button class="rounded-full border border-primary-container px-4 py-1.5 text-label-lg font-label-lg text-primary-container hover:bg-[#EBF4FD] transition-colors">
+                  Test connection
+                </button>
+<button class="rounded-full bg-primary-container px-4 py-1.5 text-label-lg font-label-lg text-white hover:bg-primary transition-colors">
+                  Update Key
+                </button>
+</div>
+</div>
+</div>
+<!-- Card 4: Google (Gemini) -->
+<div class="bg-surface-container-lowest rounded-lg card-elevation-1 p-6 card-elevation-hover transition-all">
+<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+<div class="flex items-start gap-3.5">
+<div class="w-11 h-11 rounded-lg bg-[#FAF9F6] border border-[#E0DFDC] flex items-center justify-center text-on-surface flex-shrink-0">
+<span class="material-symbols-outlined text-2xl text-secondary">auto_awesome</span>
+</div>
+<div>
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="text-headline-md font-headline-md text-on-surface">Google (Gemini)</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-high text-secondary">
+                      Cloud API
+                    </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-[#EBF4FD] text-primary-container font-medium">
+                      Ready to Test
+                    </span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary mt-1">
+                    Use Gemini 1.5 Pro / Flash with large context windows for multi-page documents and complex PDFs.
+                  </p>
+</div>
+</div>
+</div>
+<!-- Input Fields Grid -->
+<div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- API Key Field -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5">
+                  Google AI Studio API Key
+                </label>
+<div class="relative">
+<input class="w-full h-9 px-3 pr-10 bg-surface-container-lowest border border-[#666666] rounded font-mono text-body-sm text-on-surface focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all" type="password" value="AIzaSyA8B7C6D5E4F3G2H1I0J9K8L7M6N5O4P3Q"/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-secondary hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+</div>
+<p class="text-body-sm font-body-sm text-secondary mt-1">Supports up to 1M token context document digestion</p>
+</div>
+<!-- Model Selector -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5">
+                  Model Variant
+                </label>
+<select class="w-full h-9 pl-3 pr-8 bg-surface-container-lowest border border-[#666666] rounded text-body-sm font-body-sm text-on-surface focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all">
+<option selected="">gemini-1.5-pro (Deep layout reasoning)</option>
+<option>gemini-1.5-flash (Low latency extraction)</option>
+<option>gemini-1.0-ultra</option>
+</select>
+<p class="text-body-sm font-body-sm text-secondary mt-1">Direct integration with PDF raster parser</p>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="mt-5 pt-4 border-t border-[#EBEAE7] flex items-center justify-between">
+<span class="text-body-sm font-body-sm text-secondary">Free tier rate limits apply unless project billing attached</span>
+<div class="flex items-center gap-3">
+<button class="rounded-full border border-primary-container px-4 py-1.5 text-label-lg font-label-lg text-primary-container hover:bg-[#EBF4FD] transition-colors">
+                  Test connection
+                </button>
+<button class="rounded-full bg-primary-container px-4 py-1.5 text-label-lg font-label-lg text-white hover:bg-primary transition-colors">
+                  Save Key
+                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- Bottom Save / Global Actions Bar           -->
+<!-- ========================================== -->
+<div class="bg-surface-container-lowest rounded-lg p-5 card-elevation-1 border-t-2 border-primary-container flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2.5 text-body-sm font-body-sm text-secondary">
+<span class="material-symbols-outlined text-[#057642] text-xl">shield_lock</span>
+<span>All keys stored encrypted in local browser storage (IndexedDB). Never synced to cloud.</span>
+</div>
+<div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+<button class="rounded-full px-5 py-2 text-label-lg font-label-lg text-secondary hover:text-on-surface hover:bg-surface-container-low transition-colors">
+              Revert Changes
+            </button>
+<button class="rounded-full bg-primary-container hover:bg-[#004182] text-white px-6 py-2 text-label-lg font-label-lg font-semibold shadow-sm transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-base">check</span>
+              Save Settings
+            </button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- ========================================== -->
+<!-- Bottom System Status Bar                   -->
+<!-- ========================================== -->
+<footer class="bg-surface-container-lowest border-t border-[#E0DFDC] py-2.5 px-6 text-label-sm font-label-sm text-secondary z-30">
+<div class="max-w-[1128px] mx-auto flex flex-wrap items-center justify-between gap-4">
+<!-- Left status monitors -->
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-1.5 text-[#057642] font-semibold">
+<span class="w-2 h-2 rounded-full bg-[#057642]"></span>
+          Engine Ready
+        </div>
+<div class="hidden sm:flex items-center gap-1.5">
+<span class="text-secondary">Local Models Active:</span>
+<span class="text-on-surface font-medium">Ollama Llama 3 (8B)</span>
+</div>
+<div class="hidden md:flex items-center gap-1.5">
+<span class="text-secondary">RAM:</span>
+<span class="text-on-surface font-medium">218 MB</span>
+</div>
+</div>
+<!-- Right status monitors -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5 text-[#057642]">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span>Privacy Lock: Enforced</span>
+</div>
+<span class="text-[#CDCAC5]">•</span>
+<div class="text-secondary">
+          Templix v2.4.1 (Local Build)
+        </div>
+</div>
+</div>
+</footer>
+<!-- Light interactive script for password toggle & clean UX feedback -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle password masking
+      const toggleButtons = document.querySelectorAll('button:has(.material-symbols-outlined)');
+      toggleButtons.forEach(btn => {
+        const icon = btn.querySelector('.material-symbols-outlined');
+        if (icon && (icon.textContent.trim() === 'visibility' || icon.textContent.trim() === 'visibility_off')) {
+          btn.addEventListener('click', () => {
+            const input = btn.parentElement.querySelector('input');
+            if (input) {
+              if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+              } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+              }
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body></html>

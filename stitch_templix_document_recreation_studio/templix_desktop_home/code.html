@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Templix — Local-First Document Recreation</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Inter Google Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-low": "#f4f3f0",
+            "on-tertiary-container": "#9afab9",
+            "tertiary": "#005b31",
+            "tertiary-container": "#057642",
+            "inverse-primary": "#a8c8ff",
+            "primary-fixed": "#d6e3ff",
+            "inverse-on-surface": "#f2f1ee",
+            "on-primary-fixed-variant": "#00468a",
+            "primary-container": "#0a66c2",
+            "primary": "#004e99",
+            "on-surface": "#1b1c1a",
+            "background": "#faf9f6",
+            "outline-variant": "#c1c6d4",
+            "on-surface-variant": "#414752",
+            "on-tertiary-fixed-variant": "#00522c",
+            "tertiary-fixed": "#97f7b6",
+            "secondary-fixed": "#dbe4ec",
+            "on-tertiary": "#ffffff",
+            "secondary": "#565f67",
+            "surface-variant": "#e3e2df",
+            "on-background": "#1b1c1a",
+            "on-error-container": "#93000a",
+            "surface": "#faf9f6",
+            "on-primary": "#ffffff",
+            "inverse-surface": "#2f312f",
+            "on-secondary-fixed-variant": "#3f484f",
+            "on-secondary": "#ffffff",
+            "surface-tint": "#005eb5",
+            "surface-container-high": "#e9e8e5",
+            "outline": "#727783",
+            "tertiary-fixed-dim": "#7cda9b",
+            "on-secondary-fixed": "#141d23",
+            "on-error": "#ffffff",
+            "surface-dim": "#dbdad7",
+            "surface-container": "#efeeeb",
+            "on-secondary-container": "#5b646b",
+            "on-primary-container": "#dbe6ff",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-fixed": "#001b3d",
+            "error": "#ba1a1a",
+            "secondary-fixed-dim": "#bec8d0",
+            "error-container": "#ffdad6",
+            "surface-container-highest": "#e3e2df",
+            "primary-fixed-dim": "#a8c8ff",
+            "on-tertiary-fixed": "#00210e",
+            "surface-bright": "#faf9f6",
+            "secondary-container": "#d8e1ea"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter-sm": "1rem",
+            "margin": "1.5rem",
+            "margin-mobile": "0.75rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2rem",
+            "gutter": "1.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "headline-xl": ["Inter"],
+            "label-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-lg": ["Inter"]
+          },
+          "fontSize": {
+            "body-lg": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-md": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+            "headline-xl": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-lg": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Exact tactile styling matching LinkedIn-inspired desktop card system */
+    body {
+      background-color: #F3F2EF;
+      color: #1b1c1a;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card-base {
+      background-color: #FFFFFF;
+      box-shadow: 0px 0px 0px 1px #E0DFDC, 0px 1px 3px rgba(0, 0, 0, 0.08);
+      border-radius: 0.5rem;
+    }
+    .card-interactive:hover {
+      box-shadow: 0px 0px 0px 1px #CDCAC5, 0px 4px 12px rgba(0, 0, 0, 0.12);
+      transition: all 150ms ease-in-out;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      vertical-align: middle;
+      font-size: 20px;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-surface-container-low text-on-surface">
+<!-- TOP NAVIGATION BAR (Shared Component: TopNavBar with exact active style and JSON semantics) -->
+<header class="bg-surface-container-lowest dark:bg-surface docked full-width top-0 fixed z-50 h-14 border-b border-surface-variant dark:border-outline-variant shadow-sm dark:shadow-none w-full">
+<div class="w-full max-w-[1128px] mx-auto px-6 flex items-center justify-between h-14">
+<!-- Brand & Search Cluster -->
+<div class="flex items-center gap-4">
+<!-- Brand Logo with stacked layers icon & Local Badge -->
+<a class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary flex items-center gap-2 tracking-tight group" href="#">
+<div class="w-8 h-8 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-white" style="font-size: 20px;">layers</span>
+</div>
+<span class="text-on-surface font-headline-md text-headline-md font-bold">Templix</span>
+<span class="text-[10px] font-semibold tracking-wider px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface-variant uppercase">Local</span>
+</a>
+<!-- Inset Search Bar (Shared Component search_bar: on_left) -->
+<div class="relative hidden sm:block w-64 lg:w-72">
+<span class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined" style="font-size: 18px;">search</span>
+</span>
+<input class="w-full h-[34px] pl-8 pr-3 text-body-sm font-body-sm bg-[#EDF3F8] hover:bg-[#E2EAF1] focus:bg-surface-container-lowest border border-transparent focus:border-primary-container rounded text-on-surface placeholder-outline focus:outline-none transition-colors" placeholder="Search templates, documents, or styles..." type="text"/>
+</div>
+</div>
+<!-- Navigation Links Cluster -->
+<nav class="hidden md:flex items-center h-full space-x-1">
+<!-- Tab 1: Home (ACTIVE as per Semantic Mapping Hierarchy) -->
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-inverse-on-surface border-b-2 border-primary-container text-primary-container dark:text-primary-fixed font-semibold h-full px-3 transition-colors" href="#">
+<span class="material-symbols-outlined fill-icon text-primary-container" data-weight="fill" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-sm font-label-sm mt-0.5 text-on-surface font-semibold">Home</span>
+</a>
+<!-- Tab 2: Templates -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:text-on-surface dark:hover:text-inverse-on-surface h-full px-3 transition-colors hover:bg-surface-container-low transition-colors duration-150" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-sm font-label-sm mt-0.5">Templates</span>
+</a>
+<!-- Tab 3: Documents -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:text-on-surface dark:hover:text-inverse-on-surface h-full px-3 transition-colors hover:bg-surface-container-low transition-colors duration-150" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-label-sm font-label-sm mt-0.5">Documents</span>
+</a>
+<!-- Tab 4: Models & Local AI (with Local Indicator Pill) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:text-on-surface dark:hover:text-inverse-on-surface h-full px-3 transition-colors hover:bg-surface-container-low transition-colors duration-150 relative" href="#">
+<div class="relative">
+<span class="material-symbols-outlined">memory</span>
+<span class="absolute -top-1 -right-2 flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary-container opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary-container"></span>
+</span>
+</div>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="text-label-sm font-label-sm">Models &amp; Local AI</span>
+</div>
+</a>
+<!-- Tab 5: Help & Privacy -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:text-on-surface dark:hover:text-inverse-on-surface h-full px-3 transition-colors hover:bg-surface-container-low transition-colors duration-150" href="#">
+<span class="material-symbols-outlined">shield</span>
+<span class="text-label-sm font-label-sm mt-0.5">Help &amp; Privacy</span>
+</a>
+</nav>
+<!-- Trailing Action: Notifications & User Profile Menu -->
+<div class="flex items-center gap-2 border-l border-surface-variant pl-4 h-8">
+<!-- Trailing action icon from JSON: notifications -->
+<button aria-label="Notifications" class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<!-- User avatar dropdown menu -->
+<button class="flex items-center gap-2 p-1 pl-1.5 pr-2 rounded-full hover:bg-surface-container transition-colors" type="button">
+<div class="w-7 h-7 rounded-full bg-secondary-container text-on-secondary-fixed font-semibold text-xs flex items-center justify-center border border-outline-variant">
+            SL
+          </div>
+<div class="hidden lg:flex flex-col text-left">
+<span class="text-label-sm font-label-sm text-on-surface font-semibold leading-tight">Sarah L.</span>
+<span class="text-[10px] text-on-surface-variant leading-none">Editor</span>
+</div>
+<span class="material-symbols-outlined text-outline" style="font-size: 16px;">arrow_drop_down</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN VIEWPORT CONTAINER (Centered 3-Column LinkedIn Feed Structure) -->
+<main class="w-full max-w-[1128px] mx-auto pt-20 pb-16 px-4 md:px-6">
+<div class="grid grid-cols-12 gap-6 items-start">
+<!-- ========================================== -->
+<!-- LEFT COLUMN: 3 of 12 cols (225px - 280px)  -->
+<!-- ========================================== -->
+<aside class="col-span-12 lg:col-span-3 space-y-4">
+<!-- User Profile Card -->
+<div class="card-base overflow-hidden">
+<!-- Pattern banner header -->
+<div class="h-16 bg-gradient-to-r from-[#D6E4F0] via-[#E2EAF1] to-[#CDE1F4] relative border-b border-surface-variant">
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(#0A66C2_1px,transparent_1px)] [background-size:8px_8px]"></div>
+</div>
+<!-- Avatar & Identity -->
+<div class="px-4 pb-4 pt-0 text-center relative -mt-8">
+<div class="inline-block relative">
+<div class="w-16 h-16 rounded-full bg-surface-container-lowest p-1 shadow-sm mx-auto">
+<div class="w-full h-full rounded-full bg-primary-container text-on-primary flex items-center justify-center text-headline-md font-headline-md font-semibold">
+                  SL
+                </div>
+</div>
+</div>
+<h2 class="mt-2 text-headline-md font-headline-md text-on-surface">Sarah Lin</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Magazine &amp; Newsletter Team</p>
+<div class="mt-1.5 inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-secondary font-medium">
+              Student Publishing Board
+            </div>
+<!-- Subtle Horizontal Divider -->
+<div class="my-3.5 border-t border-[#EBEAE7]"></div>
+<!-- Stats Module -->
+<div class="space-y-2 text-left text-body-sm font-body-sm">
+<div class="flex items-center justify-between py-0.5">
+<span class="text-on-surface-variant text-label-sm font-label-sm">Templates managed</span>
+<span class="font-semibold text-primary-container text-label-md font-label-md">14</span>
+</div>
+<div class="flex items-center justify-between py-0.5">
+<span class="text-on-surface-variant text-label-sm font-label-sm">Documents created</span>
+<span class="font-semibold text-primary-container text-label-md font-label-md">48</span>
+</div>
+<div class="flex items-center justify-between py-0.5">
+<span class="text-on-surface-variant text-label-sm font-label-sm">Local storage</span>
+<span class="font-medium text-tertiary-container text-label-sm font-label-sm">124 MB used</span>
+</div>
+</div>
+<!-- Quick Action Links -->
+<div class="mt-3.5 pt-3 border-t border-[#EBEAE7] space-y-1.5 text-left">
+<a class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant hover:text-primary-container transition-colors py-1" href="#">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">draft</span>
+<span>My Drafts</span>
+<span class="ml-auto text-xs bg-surface-container px-1.5 py-0.2 rounded font-normal">3</span>
+</a>
+<a class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant hover:text-primary-container transition-colors py-1" href="#">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">palette</span>
+<span>Imported Brand Assets</span>
+</a>
+<a class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant hover:text-primary-container transition-colors py-1" href="#">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">rule</span>
+<span>Saved Style Rules</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Secondary Card: Workspace Settings & Local Ollama Status -->
+<div class="card-base p-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-label-md font-label-md text-on-surface font-semibold">Workspace Settings</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-on-surface" style="font-size: 18px;">tune</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low border border-surface-variant space-y-2">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-label-sm font-label-sm font-semibold text-on-surface">Default AI Engine</p>
+<p class="text-[11px] text-on-surface-variant">Local Ollama (Llama 3 8B)</p>
+</div>
+<div class="w-8 h-4 bg-tertiary-container rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+<div class="w-3 h-3 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 pt-1">
+<span class="w-2 h-2 rounded-full bg-tertiary-container inline-block"></span>
+<span class="text-[11px] font-medium text-tertiary-container">Active on localhost:11434</span>
+</div>
+</div>
+<p class="mt-3 text-[11px] text-outline leading-tight">
+            Templix queries local models offline. Zero API tokens or network calls needed.
+          </p>
+</div>
+</aside>
+<!-- ========================================== -->
+<!-- CENTER COLUMN: 6 of 12 cols (Main Canvas) -->
+<!-- ========================================== -->
+<section class="col-span-12 lg:col-span-6 space-y-5">
+<!-- CARD 1: Upload a reference document (Hero Action Card) -->
+<div class="card-base p-5 border border-surface-variant shadow-sm">
+<!-- Card Header -->
+<div class="flex items-start justify-between mb-3">
+<div>
+<h1 class="text-headline-md font-headline-md text-on-surface font-bold">Recreate an existing document</h1>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
+                Upload an old PDF or DOCX. Templix analyzes layout, typography, shapes and margins, locking the design while letting you replace content.
+              </p>
+</div>
+<button class="text-outline hover:text-on-surface p-1 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined" style="font-size: 20px;">info</span>
+</button>
+</div>
+<!-- Prominent Dashed Dropzone -->
+<div class="border-2 border-dashed border-primary-container bg-[#F0F7FF] rounded-lg p-6 text-center hover:bg-[#E5F1FC] transition-colors cursor-pointer group">
+<div class="w-12 h-12 mx-auto rounded-full bg-surface-container-lowest text-primary-container flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform mb-3 border border-[#D0E2F5]">
+<span class="material-symbols-outlined" style="font-size: 26px;">document_scanner</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface font-semibold">
+              Drag &amp; drop your reference document here
+            </h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
+              Supports multi-page PDF or Word DOCX (up to 50MB)
+            </p>
+<!-- Action buttons inside dropzone -->
+<div class="mt-4 flex flex-wrap items-center justify-center gap-3">
+<button class="rounded-full bg-primary-container hover:bg-primary text-on-primary font-semibold text-body-md font-body-md px-5 py-2 transition-all shadow-sm flex items-center gap-2" type="button">
+<span class="material-symbols-outlined" style="font-size: 18px;">upload_file</span>
+<span>Browse files</span>
+</button>
+<button class="rounded-full border border-primary-container hover:bg-[#EBF4FD] text-primary-container font-semibold text-body-md font-body-md px-4 py-2 transition-all bg-transparent" type="button">
+                Try sample newsletter PDF
+              </button>
+</div>
+<!-- Pill Indicators footer -->
+<div class="mt-4 pt-3 border-t border-[#D9E7F5] flex flex-wrap items-center justify-center gap-3 text-label-sm font-label-sm text-secondary">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-container" style="font-size: 14px;">check_circle</span>
+                Zero cloud upload
+              </span>
+<span>·</span>
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-primary-container" style="font-size: 14px;">auto_awesome</span>
+                Layer splitting: Text, Images, Rules, Spacing
+              </span>
+</div>
+</div>
+</div>
+<!-- SECTION: Active Templates Header & Filter Chips -->
+<div class="space-y-3">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<h2 class="text-headline-md font-headline-md text-on-surface font-bold">Active Templates</h2>
+<span class="text-body-sm font-body-sm text-on-surface-variant">(6 templates)</span>
+</div>
+<!-- Filter Chips -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+<button class="h-7 px-3 rounded-full text-label-sm font-label-sm font-semibold bg-primary-container text-white transition-colors">
+                All
+              </button>
+<button class="h-7 px-3 rounded-full text-label-sm font-label-sm text-on-surface-variant border border-outline hover:border-on-surface hover:text-on-surface bg-surface-container-lowest transition-colors">
+                Newsletters
+              </button>
+<button class="h-7 px-3 rounded-full text-label-sm font-label-sm text-on-surface-variant border border-outline hover:border-on-surface hover:text-on-surface bg-surface-container-lowest transition-colors">
+                Reports
+              </button>
+<button class="h-7 px-3 rounded-full text-label-sm font-label-sm text-on-surface-variant border border-outline hover:border-on-surface hover:text-on-surface bg-surface-container-lowest transition-colors">
+                Flyers &amp; Posters
+              </button>
+</div>
+</div>
+<!-- TEMPLATES GRID (4 Detailed Cards) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- TEMPLATE CARD 1: Campus Monthly Newsletter -->
+<div class="card-base card-interactive overflow-hidden flex flex-col justify-between">
+<div class="p-4">
+<!-- Thumbnail preview placeholder -->
+<div class="h-32 w-full rounded border border-surface-variant bg-[#F9F8F6] p-2 relative overflow-hidden mb-3 flex gap-2">
+<div class="w-1/2 h-full bg-white border border-[#EBEAE7] rounded-sm p-1.5 flex flex-col justify-between">
+<div class="space-y-1">
+<div class="h-2 w-3/4 bg-primary-container/20 rounded"></div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded"></div>
+<div class="h-1.5 w-5/6 bg-surface-container-highest rounded"></div>
+</div>
+<div class="h-8 w-full bg-surface-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-outline" style="font-size: 14px;">image</span>
+</div>
+</div>
+<div class="w-1/2 h-full bg-white border border-[#EBEAE7] rounded-sm p-1.5 flex flex-col gap-1.5">
+<div class="h-1.5 w-full bg-surface-container-highest rounded"></div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded"></div>
+<div class="h-1.5 w-4/5 bg-surface-container-highest rounded"></div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded mt-auto"></div>
+</div>
+<span class="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#E6F4EA] text-[#057642]">
+                    ● Template ready
+                  </span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface font-semibold line-clamp-1">
+                  Campus Monthly Newsletter (Vol. 24)
+                </h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
+                  12 layers extracted · 2 pages · Last used 3 days ago
+                </p>
+</div>
+<!-- Card Actions Footer -->
+<div class="p-3 border-t border-[#EBEAE7] bg-[#FAFAF8] flex items-center gap-2">
+<button class="flex-1 rounded-full bg-primary-container hover:bg-primary text-on-primary text-label-sm font-label-sm py-1.5 text-center font-semibold transition-colors">
+                  Create new document
+                </button>
+<button class="px-3 rounded-full border border-primary-container text-primary-container hover:bg-[#EBF4FD] text-label-sm font-label-sm py-1.5 font-semibold transition-colors">
+                  Edit
+                </button>
+</div>
+</div>
+<!-- TEMPLATE CARD 2: Annual Financial Report -->
+<div class="card-base card-interactive overflow-hidden flex flex-col justify-between">
+<div class="p-4">
+<!-- Thumbnail preview placeholder -->
+<div class="h-32 w-full rounded border border-surface-variant bg-[#F9F8F6] p-2 relative overflow-hidden mb-3 flex flex-col gap-1.5">
+<div class="h-full bg-white border border-[#EBEAE7] rounded-sm p-2 flex flex-col justify-between">
+<div class="border-b border-[#0A66C2] pb-1 flex justify-between items-center">
+<div class="h-2 w-1/3 bg-on-surface rounded"></div>
+<div class="h-1.5 w-12 bg-primary-container rounded"></div>
+</div>
+<div class="grid grid-cols-3 gap-1 my-1">
+<div class="h-6 bg-surface-container rounded p-0.5"><div class="h-1 w-full bg-outline rounded"></div></div>
+<div class="h-6 bg-surface-container rounded p-0.5"><div class="h-1 w-full bg-outline rounded"></div></div>
+<div class="h-6 bg-surface-container rounded p-0.5"><div class="h-1 w-full bg-outline rounded"></div></div>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded"></div>
+</div>
+<span class="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#E6F4EA] text-[#057642]">
+                    ● Template ready
+                  </span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface font-semibold line-clamp-1">
+                  Annual Financial &amp; Activities Report
+                </h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
+                  18 layers extracted · 6 pages · Last used yesterday
+                </p>
+</div>
+<!-- Card Actions Footer -->
+<div class="p-3 border-t border-[#EBEAE7] bg-[#FAFAF8] flex items-center gap-2">
+<button class="flex-1 rounded-full bg-primary-container hover:bg-primary text-on-primary text-label-sm font-label-sm py-1.5 text-center font-semibold transition-colors">
+                  Create new document
+                </button>
+<button class="px-3 rounded-full border border-primary-container text-primary-container hover:bg-[#EBF4FD] text-label-sm font-label-sm py-1.5 font-semibold transition-colors">
+                  Edit
+                </button>
+</div>
+</div>
+<!-- TEMPLATE CARD 3: Executive Committee Weekly Brief (Needs Review) -->
+<div class="card-base card-interactive overflow-hidden flex flex-col justify-between">
+<div class="p-4">
+<!-- Thumbnail preview placeholder with amber warning -->
+<div class="h-32 w-full rounded border border-surface-variant bg-[#F9F8F6] p-2 relative overflow-hidden mb-3">
+<div class="h-full bg-white border border-[#EBEAE7] rounded-sm p-2 flex flex-col justify-between">
+<div class="h-2 w-1/2 bg-on-surface-variant rounded"></div>
+<div class="space-y-1">
+<div class="h-1.5 w-full bg-surface-container-highest rounded"></div>
+<div class="h-1.5 w-5/6 bg-surface-container-highest rounded"></div>
+<div class="h-1.5 w-2/3 bg-error-container rounded"></div>
+</div>
+<div class="h-3 w-1/4 bg-surface-container rounded"></div>
+</div>
+<span class="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#FDF2E9] text-[#B24020] border border-[#F3CEB8] flex items-center gap-0.5" title="1 font substitution required">
+<span>▲</span> Needs review
+                  </span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface font-semibold line-clamp-1">
+                  Executive Committee Weekly Brief
+                </h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
+                  8 layers extracted · 1 page · Modified 1 hr ago
+                </p>
+</div>
+<!-- Card Actions Footer -->
+<div class="p-3 border-t border-[#EBEAE7] bg-[#FAFAF8] flex items-center gap-2">
+<button class="flex-1 rounded-full bg-[#B24020] hover:bg-[#963417] text-white text-label-sm font-label-sm py-1.5 text-center font-semibold transition-colors">
+                  Review &amp; adjust
+                </button>
+<button class="px-3 rounded-full border border-outline text-on-surface hover:bg-surface-container text-label-sm font-label-sm py-1.5 font-semibold transition-colors">
+                  Layers
+                </button>
+</div>
+</div>
+<!-- TEMPLATE CARD 4: Orientation Week Guide & Schedule -->
+<div class="card-base card-interactive overflow-hidden flex flex-col justify-between">
+<div class="p-4">
+<!-- Thumbnail preview placeholder -->
+<div class="h-32 w-full rounded border border-surface-variant bg-[#F9F8F6] p-2 relative overflow-hidden mb-3 flex gap-1">
+<div class="w-1/3 h-full bg-white border-r border-[#E0DFDC] p-1 flex flex-col justify-between">
+<div class="h-1.5 w-3/4 bg-primary-container rounded"></div>
+<div class="h-6 w-full bg-surface-container rounded"></div>
+</div>
+<div class="w-1/3 h-full bg-white border-r border-[#E0DFDC] p-1 flex flex-col justify-center gap-1">
+<div class="h-1.5 w-full bg-surface-container-highest rounded"></div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded"></div>
+</div>
+<div class="w-1/3 h-full bg-white p-1 flex flex-col justify-between">
+<div class="h-1.5 w-1/2 bg-outline rounded"></div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded"></div>
+</div>
+<span class="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#E6F4EA] text-[#057642]">
+                    ● Template ready
+                  </span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface font-semibold line-clamp-1">
+                  Orientation Week Guide &amp; Schedule
+                </h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
+                  15 layers extracted · 3 pages · Last used 2 weeks ago
+                </p>
+</div>
+<!-- Card Actions Footer -->
+<div class="p-3 border-t border-[#EBEAE7] bg-[#FAFAF8] flex items-center gap-2">
+<button class="flex-1 rounded-full bg-primary-container hover:bg-primary text-on-primary text-label-sm font-label-sm py-1.5 text-center font-semibold transition-colors">
+                  Create new document
+                </button>
+<button class="px-3 rounded-full border border-primary-container text-primary-container hover:bg-[#EBF4FD] text-label-sm font-label-sm py-1.5 font-semibold transition-colors">
+                  Edit
+                </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- RIGHT COLUMN: 3 of 12 cols (300px rail)    -->
+<!-- ========================================== -->
+<aside class="col-span-12 lg:col-span-3 space-y-4">
+<!-- CARD 1: Recent Documents -->
+<div class="card-base p-4">
+<div class="flex items-center justify-between mb-3">
+<h2 class="text-headline-md font-headline-md text-on-surface font-bold">Recent documents</h2>
+<a class="text-label-sm font-label-sm text-primary-container hover:underline font-semibold" href="#">View all</a>
+</div>
+<div class="divide-y divide-[#EBEAE7]">
+<!-- Item 1 -->
+<div class="py-2.5 first:pt-0 last:pb-0">
+<div class="flex items-start justify-between gap-1">
+<a class="text-body-md font-body-md font-semibold text-on-surface hover:text-primary-container transition-colors line-clamp-1" href="#">
+                  March 2025 Issue - Draft v2
+                </a>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-on-surface" style="font-size: 16px;">arrow_forward</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Updated 2 hours ago</p>
+<div class="mt-1 flex items-center gap-1.5">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#EBF4FD] text-[#0A66C2]">
+                  In Progress (AI Assist)
+                </span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="py-2.5">
+<div class="flex items-start justify-between gap-1">
+<a class="text-body-md font-body-md font-semibold text-on-surface hover:text-primary-container transition-colors line-clamp-1" href="#">
+                  Q1 Budget Summary - Final
+                </a>
+<button class="text-outline hover:text-primary-container" title="Download PDF">
+<span class="material-symbols-outlined" style="font-size: 16px;">download</span>
+</button>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Exported PDF</p>
+<div class="mt-1 flex items-center gap-1.5">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#E6F4EA] text-[#057642]">
+                  Completed
+                </span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="py-2.5 last:pb-0">
+<div class="flex items-start justify-between gap-1">
+<a class="text-body-md font-body-md font-semibold text-on-surface hover:text-primary-container transition-colors line-clamp-1" href="#">
+                  O-Week Flyer - Batch 1
+                </a>
+<button class="text-outline hover:text-primary-container" title="Download PDF">
+<span class="material-symbols-outlined" style="font-size: 16px;">download</span>
+</button>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Updated 4 days ago</p>
+<div class="mt-1 flex items-center gap-1.5">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-[#E6F4EA] text-[#057642]">
+                  Completed
+                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- CARD 2: Privacy & Local-first (High Trust Badge Card) -->
+<div class="card-base p-4 border-l-4 border-l-primary-container">
+<div class="flex items-center gap-2 mb-2 text-primary-container">
+<span class="material-symbols-outlined" style="font-size: 22px;">verified_user</span>
+<h3 class="text-headline-md font-headline-md font-bold text-on-surface">100% On-Device Processing</h3>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+            Your reference PDFs, text layers, and exported files never leave this machine. OCR, layer extraction, and font matching run entirely in your local browser runtime.
+          </p>
+<div class="mt-3 py-1.5 px-2 rounded bg-surface-container flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="text-[11px] font-medium text-on-surface">Connected to Local Ollama</span>
+</div>
+<a class="mt-3 inline-block text-[11px] font-semibold text-primary-container hover:underline" href="#">
+            Learn how Templix protects student and office data →
+          </a>
+</div>
+<!-- CARD 3: Quick Tip Card -->
+<div class="card-base p-4 bg-[#FCFBF9]">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">lightbulb</span>
+<span class="text-label-md font-label-md text-on-surface font-semibold">Tip: AI Assist vs Manual Edit</span>
+</div>
+<ul class="text-body-sm font-body-sm text-on-surface-variant space-y-1.5 pl-4 list-disc">
+<li>Use <strong>AI Interview mode</strong> when converting multi-column text with custom callouts.</li>
+<li>Use the <strong>Sidebar Inspector</strong> to micro-adjust millimeter grid alignment and font kerning.</li>
+</ul>
+</div>
+<!-- Mini Footer Links (LinkedIn-style calm metadata) -->
+<div class="px-2 pt-2 text-[11px] text-outline text-center space-x-2">
+<a class="hover:underline" href="#">About</a>
+<span>·</span>
+<a class="hover:underline" href="#">Accessibility</a>
+<span>·</span>
+<a class="hover:underline" href="#">Local Privacy</a>
+<span>·</span>
+<span>Templix v2.4 (Offline Core)</span>
+</div>
+</aside>
+</div>
+</main>
+</body></html>

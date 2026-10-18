@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Templix - Choose Creation Mode</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim from Design System -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-dim": "#dbdad7",
+            "tertiary-fixed-dim": "#7cda9b",
+            "tertiary-container": "#057642",
+            "on-primary-fixed-variant": "#00468a",
+            "surface-bright": "#faf9f6",
+            "surface-variant": "#e3e2df",
+            "on-tertiary-container": "#9afab9",
+            "tertiary": "#005b31",
+            "on-secondary-fixed": "#141d23",
+            "secondary-container": "#d8e1ea",
+            "on-secondary-container": "#5b646b",
+            "on-tertiary-fixed-variant": "#00522c",
+            "tertiary-fixed": "#97f7b6",
+            "secondary-fixed": "#dbe4ec",
+            "on-secondary": "#ffffff",
+            "on-primary-container": "#dbe6ff",
+            "on-error": "#ffffff",
+            "surface-container-highest": "#e3e2df",
+            "on-surface-variant": "#414752",
+            "primary-container": "#0a66c2",
+            "outline-variant": "#c1c6d4",
+            "surface-container-low": "#f4f3f0",
+            "on-secondary-fixed-variant": "#3f484f",
+            "on-primary": "#ffffff",
+            "secondary-fixed-dim": "#bec8d0",
+            "on-primary-fixed": "#001b3d",
+            "outline": "#727783",
+            "surface": "#faf9f6",
+            "on-background": "#1b1c1a",
+            "background": "#faf9f6",
+            "primary-fixed": "#d6e3ff",
+            "secondary": "#565f67",
+            "inverse-surface": "#2f312f",
+            "on-error-container": "#93000a",
+            "on-surface": "#1b1c1a",
+            "surface-container-high": "#e9e8e5",
+            "inverse-on-surface": "#f2f1ee",
+            "error": "#ba1a1a",
+            "surface-container": "#efeeeb",
+            "inverse-primary": "#a8c8ff",
+            "primary-fixed-dim": "#a8c8ff",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-fixed": "#00210e",
+            "on-tertiary": "#ffffff",
+            "error-container": "#ffdad6",
+            "primary": "#004e99",
+            "surface-tint": "#005eb5"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "0.75rem",
+            "gutter-sm": "1rem",
+            "space-xl": "2rem",
+            "space-xs": "0.25rem",
+            "gutter": "1.5rem",
+            "space-sm": "0.5rem",
+            "margin": "1.5rem",
+            "space-lg": "1.5rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "headline-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-xl": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-lg": ["Inter"]
+          },
+          "fontSize": {
+            "headline-md": [
+              "16px",
+              {
+                "lineHeight": "24px",
+                "letterSpacing": "-0.005em",
+                "fontWeight": "600"
+              }
+            ],
+            "body-lg": [
+              "15px",
+              {
+                "lineHeight": "22px",
+                "fontWeight": "400"
+              }
+            ],
+            "headline-xl": [
+              "24px",
+              {
+                "lineHeight": "32px",
+                "letterSpacing": "-0.015em",
+                "fontWeight": "600"
+              }
+            ],
+            "label-sm": [
+              "11px",
+              {
+                "lineHeight": "14px",
+                "letterSpacing": "0.01em",
+                "fontWeight": "500"
+              }
+            ],
+            "headline-lg": [
+              "20px",
+              {
+                "lineHeight": "28px",
+                "letterSpacing": "-0.01em",
+                "fontWeight": "600"
+              }
+            ],
+            "label-md": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "fontWeight": "600"
+              }
+            ],
+            "body-md": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "fontWeight": "400"
+              }
+            ],
+            "body-sm": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "fontWeight": "400"
+              }
+            ],
+            "label-lg": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "fontWeight": "600"
+              }
+            ]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #F3F2EF;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 20px;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    .card-craft {
+      box-shadow: 0px 0px 0px 1px #E0DFDC, 0px 1px 3px rgba(0, 0, 0, 0.08);
+      transition: all 150ms ease-in-out;
+    }
+    .card-craft:hover {
+      box-shadow: 0px 0px 0px 1px #0A66C2, 0px 6px 16px rgba(10, 102, 194, 0.12);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-on-surface antialiased">
+<!-- Top Navigation Bar: Matching Templix Blueprint -->
+<header class="bg-surface-container-lowest border-b border-surface-variant fixed top-0 left-0 right-0 z-50 h-14 shadow-sm">
+<div class="w-full max-w-[1128px] mx-auto px-6 flex items-center justify-between h-14">
+<!-- Left: Logo & Contextual Breadcrumb -->
+<div class="flex items-center gap-4">
+<!-- Brand Logo -->
+<a class="flex items-center gap-2 group" href="#">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-on-primary font-bold text-headline-md tracking-tight shadow-sm">
+            Tx
+          </div>
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Templix</span>
+<span class="bg-surface-container-low text-secondary font-label-sm text-label-sm px-1.5 py-0.5 rounded border border-surface-variant tracking-wider font-semibold">
+            LOCAL
+          </span>
+</a>
+<div class="h-4 w-px bg-surface-variant"></div>
+<!-- Back Link / Breadcrumb -->
+<a class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary-container font-body-sm text-body-sm transition-colors group" href="#">
+<span class="material-symbols-outlined text-[16px] group-hover:-translate-x-0.5 transition-transform" data-icon="arrow_back">arrow_back</span>
+<span>Back to Document Analysis</span>
+<span class="text-outline font-normal">(Campus_Monthly_Newsletter_March2025)</span>
+</a>
+</div>
+<!-- Right: Document Status Pill & User Profile -->
+<div class="flex items-center gap-3">
+<!-- Document Meta Badge -->
+<div class="hidden md:flex items-center gap-2 px-3 py-1 bg-surface-container-low border border-surface-variant rounded-full text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container" data-icon="description">description</span>
+<span class="font-medium text-on-surface max-w-[220px] truncate">Campus_Monthly_Newsletter_March2025.pdf</span>
+<span class="text-outline">•</span>
+<span>2 pages</span>
+<span class="text-outline">•</span>
+<span>24 layers</span>
+</div>
+<!-- Notifications Action Icon -->
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-secondary hover:bg-surface-container-low hover:text-on-surface transition-colors" title="Notifications">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<!-- User Avatar -->
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-fixed flex items-center justify-center font-label-md text-label-md font-bold ring-2 ring-surface-variant cursor-pointer hover:ring-primary-container transition-all" title="User avatar profile menu">
+          SL
+        </div>
+</div>
+</div>
+</header>
+<!-- Main Work Area Container (max-w-4xl, centered, padding top accounting for fixed header) -->
+<main class="flex-1 w-full max-w-4xl mx-auto px-6 pt-24 pb-16 flex flex-col justify-center">
+<!-- Header Section -->
+<div class="text-center mb-8">
+<!-- Eyebrow Chip -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed text-primary font-label-sm text-label-sm mb-3">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span>Step 2 of 3 · Creation Mode</span>
+</div>
+<!-- Main Headline -->
+<h1 class="text-headline-xl font-headline-xl font-bold text-on-surface text-center mb-2 tracking-tight">
+        How do you want to create your new document?
+      </h1>
+<!-- Subtitle -->
+<p class="text-secondary font-body-md text-body-md text-center max-w-xl mx-auto">
+        Choose how you'd like to draft new content into your locked template structure. You can switch between modes at any time.
+      </p>
+</div>
+<!-- Creation Mode Cards (2-Column Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<!-- Card 1: AI Assist -->
+<div class="card-craft bg-surface-container-lowest rounded-lg p-6 flex flex-col justify-between border border-surface-variant group">
+<div>
+<!-- Header with Circular Soft Blue Icon & Badge -->
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-full bg-[#E8F3FF] flex items-center justify-center text-primary-container ring-4 ring-[#F2F8FF]">
+<span class="material-symbols-outlined text-2xl" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<span class="bg-[#EBF4FD] text-primary-container font-label-sm text-label-sm px-2.5 py-0.5 rounded-full font-semibold border border-primary-fixed">
+              Recommended
+            </span>
+</div>
+<!-- Title -->
+<div class="flex items-center gap-2 mb-2">
+<h2 class="text-headline-lg font-headline-lg font-bold text-on-surface">AI Assist</h2>
+<span class="text-tertiary-container font-label-sm text-label-sm font-medium bg-[#E6F4EA] px-2 py-0.5 rounded">Fastest</span>
+</div>
+<!-- Short Description -->
+<p class="text-secondary font-body-sm text-body-sm leading-relaxed mb-4">
+            An interactive interview flow that asks questions for each section, drafting newsletter stories, quotes, and highlights directly into your template's exact layout bounds.
+          </p>
+<!-- Badges & Chips -->
+<div class="flex items-center gap-2 flex-wrap mb-6">
+<span class="inline-flex items-center gap-1.5 bg-surface-container-low text-on-surface border border-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-full font-medium">
+<span class="material-symbols-outlined text-[14px] text-outline" data-icon="key">key</span>
+              Bring your own API key
+            </span>
+<span class="inline-flex items-center gap-1.5 bg-surface-container-low text-on-surface border border-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-full font-medium">
+<span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span>
+              Local models supported
+            </span>
+</div>
+<!-- Divider -->
+<div class="h-px bg-surface-variant w-full mb-5"></div>
+<!-- Feature Bullet Checklist -->
+<ul class="space-y-3 mb-6">
+<li class="flex items-start gap-2.5 text-on-surface font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-tertiary-container text-[18px] mt-0.5 shrink-0" data-icon="check_circle">check_circle</span>
+<span>Interactive conversational interview for quick drafting</span>
+</li>
+<li class="flex items-start gap-2.5 text-on-surface font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-tertiary-container text-[18px] mt-0.5 shrink-0" data-icon="check_circle">check_circle</span>
+<span>Connects to Ollama (offline) or OpenAI / Anthropic</span>
+</li>
+<li class="flex items-start gap-2.5 text-on-surface font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-tertiary-container text-[18px] mt-0.5 shrink-0" data-icon="check_circle">check_circle</span>
+<span>Automatic word-count fit to prevent layout overflow</span>
+</li>
+</ul>
+</div>
+<!-- Action Button -->
+<a class="w-full inline-flex items-center justify-center gap-2 bg-primary-container hover:bg-[#004182] text-on-primary font-label-lg text-label-lg font-semibold py-2.5 px-4 rounded-full text-center transition-colors shadow-sm" href="#">
+<span>Continue with AI Assist</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<!-- Card 2: Manual Edit -->
+<div class="card-craft bg-surface-container-lowest rounded-lg p-6 flex flex-col justify-between border border-surface-variant group">
+<div>
+<!-- Header with Circular Soft Gray/Blue Icon & Badge -->
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-full bg-[#EBF4FD] flex items-center justify-center text-primary-container ring-4 ring-[#F2F8FF]">
+<span class="material-symbols-outlined text-2xl" data-icon="tune">tune</span>
+</div>
+<span class="bg-surface-container-high text-secondary font-label-sm text-label-sm px-2.5 py-0.5 rounded-full font-semibold border border-surface-variant">
+              Precision
+            </span>
+</div>
+<!-- Title -->
+<div class="flex items-center gap-2 mb-2">
+<h2 class="text-headline-lg font-headline-lg font-bold text-on-surface">Manual Edit</h2>
+<span class="text-secondary font-label-sm text-label-sm font-medium bg-surface-container-low px-2 py-0.5 rounded">Exact Spec</span>
+</div>
+<!-- Short Description -->
+<p class="text-secondary font-body-sm text-body-sm leading-relaxed mb-4">
+            Direct form fields for every extracted text box, headline, and image slot, paired with a real-time synchronized document canvas preview.
+          </p>
+<!-- Badges & Chips -->
+<div class="flex items-center gap-2 flex-wrap mb-6">
+<span class="inline-flex items-center gap-1.5 bg-surface-container-low text-on-surface border border-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-full font-medium">
+<span class="material-symbols-outlined text-[14px] text-outline" data-icon="preview">preview</span>
+              Live preview
+            </span>
+<span class="inline-flex items-center gap-1.5 bg-surface-container-low text-on-surface border border-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-full font-medium">
+<span class="material-symbols-outlined text-[14px] text-outline" data-icon="fit_screen">fit_screen</span>
+              Full control
+            </span>
+</div>
+<!-- Divider -->
+<div class="h-px bg-surface-variant w-full mb-5"></div>
+<!-- Feature Bullet Checklist -->
+<ul class="space-y-3 mb-6">
+<li class="flex items-start gap-2.5 text-on-surface font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-tertiary-container text-[18px] mt-0.5 shrink-0" data-icon="check_circle">check_circle</span>
+<span>Side-by-side live document canvas with instant re-render</span>
+</li>
+<li class="flex items-start gap-2.5 text-on-surface font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-tertiary-container text-[18px] mt-0.5 shrink-0" data-icon="check_circle">check_circle</span>
+<span>Direct character count, typography kerning, and image replacements</span>
+</li>
+<li class="flex items-start gap-2.5 text-on-surface font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-tertiary-container text-[18px] mt-0.5 shrink-0" data-icon="check_circle">check_circle</span>
+<span>Fine-grained control over locked margins and baseline alignment</span>
+</li>
+</ul>
+</div>
+<!-- Action Button -->
+<a class="w-full inline-flex items-center justify-center gap-2 bg-primary-container hover:bg-[#004182] text-on-primary font-label-lg text-label-lg font-semibold py-2.5 px-4 rounded-full text-center transition-colors shadow-sm" href="#">
+<span>Continue with Manual Edit</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Privacy & Trust Banner -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-lg p-4 flex items-start gap-3.5 shadow-sm">
+<div class="w-8 h-8 rounded-full bg-[#E6F4EA] flex items-center justify-center text-tertiary-container shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]" data-icon="verified_user">verified_user</span>
+</div>
+<div class="flex-1">
+<p class="text-on-surface font-body-sm text-body-sm leading-relaxed">
+<strong class="font-semibold text-on-surface">100% Privacy Guarantee:</strong> All document generation, text formatting, and local model inference happen on-device. No document text or metadata is sent to cloud servers unless you explicitly provide an external API key.
+        </p>
+<div class="mt-1.5">
+<a class="inline-flex items-center gap-1 text-primary-container hover:underline font-label-sm text-label-sm font-semibold" href="#">
+<span>Learn more about local processing &amp; Ollama configuration</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+</a>
+</div>
+</div>
+</div>
+</main>
+<!-- Persistent Bottom Status & Utility Bar -->
+<footer class="bg-surface-container-lowest border-t border-surface-variant fixed bottom-0 left-0 right-0 h-9 z-40 text-secondary text-body-sm font-body-sm select-none">
+<div class="w-full max-w-[1128px] mx-auto px-6 h-full flex items-center justify-between">
+<!-- Left: Engine & Model Status -->
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="font-medium text-on-surface">Engine Ready</span>
+<span class="text-outline">·</span>
+<span>Local Models Active (Ollama Llama 3)</span>
+<span class="text-outline">•</span>
+<span class="font-mono text-outline">RAM usage: 218 MB</span>
+</div>
+<!-- Right: Utility Actions & Nav References -->
+<div class="flex items-center gap-4 text-outline font-label-sm text-label-sm">
+<button class="hover:text-on-surface transition-colors flex items-center gap-1">
+<span>Keyboard Shortcuts</span>
+<kbd class="px-1.5 py-0.2 bg-surface-container-high border border-surface-variant rounded text-[10px] text-on-surface font-mono">?</kbd>
+</button>
+<span class="text-surface-variant">•</span>
+<a class="hover:text-on-surface transition-colors" href="#">Documentation</a>
+<span class="text-surface-variant">•</span>
+<a class="hover:text-on-surface transition-colors" href="#">Help &amp; Privacy</a>
+</div>
+</div>
+</footer>
+</body></html>

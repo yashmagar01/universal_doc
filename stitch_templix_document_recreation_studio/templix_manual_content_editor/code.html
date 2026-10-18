@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Templix - Manual Content Editor</title>
+<!-- Inter Google Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config based on Design System & Style Guidance -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed-dim": "#a8c8ff",
+            "on-primary-fixed": "#001b3d",
+            "inverse-primary": "#a8c8ff",
+            "surface-bright": "#faf9f6",
+            "surface-container": "#efeeeb",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "tertiary": "#005b31",
+            "secondary-fixed-dim": "#bec8d0",
+            "on-primary": "#ffffff",
+            "surface-container-low": "#f4f3f0",
+            "on-background": "#1b1c1a",
+            "on-primary-fixed-variant": "#00468a",
+            "secondary": "#565f67",
+            "outline": "#727783",
+            "on-surface": "#1b1c1a",
+            "on-tertiary-fixed-variant": "#00522c",
+            "primary": "#004e99",
+            "outline-variant": "#c1c6d4",
+            "inverse-on-surface": "#f2f1ee",
+            "secondary-fixed": "#dbe4ec",
+            "surface": "#faf9f6",
+            "tertiary-fixed-dim": "#7cda9b",
+            "tertiary-container": "#057642",
+            "background": "#faf9f6",
+            "on-secondary-container": "#5b646b",
+            "on-secondary-fixed-variant": "#3f484f",
+            "on-tertiary-container": "#9afab9",
+            "on-tertiary": "#ffffff",
+            "surface-container-high": "#e9e8e5",
+            "error-container": "#ffdad6",
+            "surface-tint": "#005eb5",
+            "primary-fixed": "#d6e3ff",
+            "error": "#ba1a1a",
+            "on-primary-container": "#dbe6ff",
+            "surface-variant": "#e3e2df",
+            "on-surface-variant": "#414752",
+            "on-tertiary-fixed": "#00210e",
+            "surface-container-highest": "#e3e2df",
+            "on-secondary-fixed": "#141d23",
+            "inverse-surface": "#2f312f",
+            "on-error-container": "#93000a",
+            "tertiary-fixed": "#97f7b6",
+            "surface-dim": "#dbdad7",
+            "primary-container": "#0a66c2",
+            "secondary-container": "#d8e1ea",
+            "on-error": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.5rem",
+            "gutter-sm": "1rem",
+            "space-xl": "2rem",
+            "gutter": "1.5rem",
+            "space-lg": "1.5rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "margin-mobile": "0.75rem"
+          },
+          "fontFamily": {
+            "label-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-xl": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-md": ["Inter"],
+            "label-lg": ["Inter"],
+            "label-sm": ["Inter"]
+          },
+          "fontSize": {
+            "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+            "body-lg": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "headline-lg": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-xl": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-md": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.01em", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #faf9f6;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c1c6d4;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #727783;
+    }
+    /* Subtle dot grid pattern for canvas workspace */
+    .bg-dot-grid {
+      background-image: radial-gradient(#d8e1ea 1.2px, transparent 1.2px);
+      background-size: 20px 20px;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface antialiased h-screen flex flex-col overflow-hidden select-none">
+<!-- 1. TOP BAR (Docked, 56px height, subtle bottom border) -->
+<header class="h-14 bg-surface-container-lowest border-b border-surface-variant flex-shrink-0 z-40 px-4 flex items-center justify-between shadow-sm">
+<!-- Left Section: Logo, Back Link, Document Title & Status -->
+<div class="flex items-center space-x-3">
+<!-- App Brand Mark -->
+<div class="flex items-center gap-1.5 pr-2 border-r border-surface-variant">
+<div class="w-7 h-7 bg-primary-container text-on-primary rounded flex items-center justify-center font-bold text-[13px] tracking-tight">
+          Tx
+        </div>
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Templix</span>
+<span class="bg-surface-container-high text-on-surface-variant font-label-sm text-[10px] px-1.5 py-0.5 rounded font-semibold tracking-wider ml-0.5">LOCAL</span>
+</div>
+<!-- Back Action -->
+<a class="flex items-center text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors py-1 px-2 rounded hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined text-[16px] mr-1">arrow_back</span>
+        Back to Modes
+      </a>
+<!-- Document Breadcrumb & Status -->
+<div class="flex items-center bg-surface-container-low px-2.5 py-1 rounded border border-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary-container mr-1.5">description</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold max-w-[260px] truncate">Campus_Monthly_Newsletter_March2025.pdf</span>
+<span class="text-on-surface-variant text-[12px] mx-1.5">·</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Draft</span>
+</div>
+<!-- Auto-save Pill -->
+<div class="flex items-center text-tertiary-container font-label-sm text-label-sm gap-1 bg-[#E6F4EA] px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Auto-saved locally</span>
+</div>
+</div>
+<!-- Right Section: History Buttons, Draft Save, Export Action, Settings, User Avatar -->
+<div class="flex items-center space-x-2">
+<!-- Undo / Redo Group -->
+<div class="flex items-center border border-surface-variant rounded-full p-0.5 bg-surface-container-lowest">
+<button class="w-7 h-7 flex items-center justify-center rounded-full text-secondary hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Undo (Ctrl+Z)">
+<span class="material-symbols-outlined text-[18px]">undo</span>
+</button>
+<button class="w-7 h-7 flex items-center justify-center rounded-full text-secondary hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Redo (Ctrl+Y)">
+<span class="material-symbols-outlined text-[18px]">redo</span>
+</button>
+</div>
+<div class="h-5 w-px bg-surface-variant mx-1"></div>
+<!-- Secondary Action: Save Draft -->
+<button class="h-8 px-3.5 rounded-full border border-primary-container text-primary-container hover:bg-primary-fixed/20 font-label-md text-label-md transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">save</span>
+        Save Draft
+      </button>
+<!-- Primary Action: Export PDF -->
+<button class="h-8 px-4 rounded-full bg-primary-container text-on-primary hover:bg-[#004182] font-label-md text-label-md transition-colors flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">download</span>
+        Export PDF
+      </button>
+<div class="h-5 w-px bg-surface-variant mx-1"></div>
+<!-- Local Engine Quick Status Pill -->
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container-low border border-surface-variant text-on-surface-variant font-label-sm text-[11px]" title="Hardware-accelerated OCR &amp; Layout Pipeline Active">
+<span class="w-2 h-2 rounded-full bg-[#057642]"></span>
+<span>Engine Active</span>
+</div>
+<!-- Quick Settings Icon -->
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Document Engine Settings">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+</button>
+<!-- User Initials Avatar -->
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md font-semibold ring-2 ring-surface-variant cursor-pointer" title="User avatar profile menu">
+        SL
+      </div>
+</div>
+</header>
+<!-- 2. MAIN WORKSPACE ROW (Center Canvas + Right Sidebar) -->
+<div class="flex-1 flex overflow-hidden">
+<!-- CANVAS / WORKSPACE STAGE (Flexible Center) -->
+<main class="flex-1 bg-[#F3F2EF] bg-dot-grid relative flex flex-col items-center overflow-y-auto custom-scrollbar p-6">
+<!-- Top Layout Meta / Page Header Notice -->
+<div class="w-full max-w-[680px] flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mb-3 px-1">
+<div class="flex items-center gap-2">
+<span class="bg-surface-container-highest text-on-surface px-2 py-0.5 rounded font-medium">Letter Format (8.5 × 11 in)</span>
+<span>·</span>
+<span>Target Accuracy: <strong class="text-tertiary font-semibold">99.4% pixel-matched</strong></span>
+</div>
+<div class="flex items-center gap-1.5 text-secondary">
+<span class="material-symbols-outlined text-[15px]">lock</span>
+<span>Bounding-box locks active</span>
+</div>
+</div>
+<!-- DOCUMENT PREVIEW CONTAINER (Letter Card Simulation) -->
+<div class="w-[660px] min-h-[854px] bg-surface-container-lowest rounded shadow-[0px_0px_0px_1px_#E0DFDC,0px_4px_16px_rgba(0,0,0,0.08)] flex flex-col p-8 relative mb-20 transition-all select-text">
+<!-- DOCUMENT MASTHEAD / HEADER -->
+<header class="border-b-2 border-on-surface pb-3 mb-5">
+<div class="flex items-center justify-between text-[11px] font-label-sm text-secondary uppercase tracking-widest pb-1 border-b border-surface-variant">
+<span>Student Affairs &amp; Leadership Briefing</span>
+<span>March 2025 · Vol. 14 · Issue 4</span>
+</div>
+<div class="pt-2 text-center">
+<h1 class="font-headline-xl text-[34px] leading-tight font-extrabold text-on-surface tracking-tighter uppercase font-serif">CAMPUS CHRONICLE</h1>
+<p class="font-label-sm text-secondary tracking-widest text-[10px] uppercase mt-0.5">The Independent Weekly Voice of University Innovation &amp; Academic Life</p>
+</div>
+</header>
+<!-- LEAD EDITORIAL STORY (Active Highlight / Synchronized State) -->
+<article class="relative mb-5 p-3.5 -mx-3.5 rounded border-2 border-primary-container bg-primary-fixed/5 transition-all">
+<!-- Floating Pill Tag for Active Selection -->
+<div class="absolute -top-3 left-3 bg-primary-container text-on-primary text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]">edit</span>
+<span>[Heading 1 · Lead Story]</span>
+</div>
+<!-- Selection Corner Handles -->
+<span class="absolute -top-1 -left-1 w-2 h-2 bg-primary-container border border-surface-container-lowest"></span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-primary-container border border-surface-container-lowest"></span>
+<span class="absolute -bottom-1 -left-1 w-2 h-2 bg-primary-container border border-surface-container-lowest"></span>
+<span class="absolute -bottom-1 -right-1 w-2 h-2 bg-primary-container border border-surface-container-lowest"></span>
+<!-- Lead Headline -->
+<h2 class="font-headline-lg text-[22px] font-bold text-on-surface leading-tight tracking-tight mb-1.5">
+            New Local AI Laboratories Open for Collaborative Research Projects
+          </h2>
+<!-- Author Byline & Timestamp -->
+<div class="flex items-center gap-2 text-[11px] font-label-sm text-secondary mb-3">
+<span class="font-semibold text-primary">Dr. Eleanor Vance &amp; Student Tech Board</span>
+<span>•</span>
+<span>Published March 18, 2025</span>
+<span>•</span>
+<span class="bg-[#EBF4FD] text-primary-container px-1.5 py-0.2 rounded font-medium">Verified Source</span>
+</div>
+<!-- Lead Story Figure / Article Image -->
+<div class="w-full h-44 rounded overflow-hidden mb-3 border border-surface-variant relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Modern university artificial intelligence robotics laboratory with student researchers collaborating around illuminated workstations with dual monitors in daylight interior. Clean minimalist university tech space with bright natural window light, subtle blue accent lighting, organized scientific equipment, and calm professional productivity atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZBB5fb4FIPdMUl3iVadfeXPqaMNFBQgYGoeMBkbfrMwpeBteU2y5AirP28pvGIoLc_g7VB8c36PWjDXX0ikGPThySyTZb5a9LDdvUQ-gyWNOHPLAqEm2aacAH4Rh0-O4R9mz9Yx9aJX1WpjVAYX9AX-ygbvrR4t9nrwfF-Uz2vp-DTvJmTtwzylGvUG2X8jVRRz66BOEWC5-bNCUo46n0eZ8Inrph68SmuD2QPdvwgCGZL3oDPTtb"/>
+<div class="absolute bottom-0 inset-x-0 bg-surface-container-lowest/90 backdrop-blur-sm px-2.5 py-1 text-[10px] font-label-sm text-secondary border-t border-surface-variant flex justify-between">
+<span>Figure 1.0: Advanced computing clusters deployed in North Engineering Hall.</span>
+<span class="text-tertiary-container font-semibold">100% Vector Fit</span>
+</div>
+</div>
+<!-- Lead Story Two-Column Text Flow -->
+<div class="grid grid-cols-2 gap-4 text-justify font-body-sm text-[12.5px] leading-relaxed text-on-surface">
+<p>
+              In a major milestone for decentralized university computing, the Department of Computer Science announced the inauguration of three brand-new collaborative laboratories equipped with local-first neural workstations. Unlike centralized cloud infrastructure, the hardware arrays emphasize private, low-latency, and sovereign data handling.
+            </p>
+<p>
+              The initiative provides student researchers and interdisciplinary faculty direct access to localized large language and computer vision pipelines without cloud latency or licensing subscription caps. Over forty undergraduate fellowship recipients have already registered exploratory capstone projects for this spring semester.
+            </p>
+</div>
+</article>
+<!-- SECONDARY ARTICLES & HIGHLIGHTS -->
+<section class="border-t border-surface-variant pt-3 mb-4">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[10px] font-label-md uppercase tracking-wider text-secondary font-bold">Featured Campus Dispatch</span>
+<span class="text-[10px] font-label-sm text-on-surface-variant">Page 1 Section B</span>
+</div>
+<div class="grid grid-cols-3 gap-3">
+<div class="col-span-2">
+<h3 class="font-headline-md text-headline-md font-semibold text-on-surface leading-snug hover:text-primary-container cursor-pointer transition-colors">
+                Student Innovation Showcase Announced for Spring
+              </h3>
+<p class="font-body-sm text-[11.5px] leading-relaxed text-on-surface-variant mt-1">
+                Annual multidisciplinary expo scheduled for May 12th will feature interactive sustainability booths, student enterprise pitches, and regional venture mentors.
+              </p>
+<div class="flex items-center gap-2 mt-1.5 text-[10px] font-label-sm text-secondary">
+<span>By Marcus Chen</span>
+<span>·</span>
+<span>March 19, 2025</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded p-2.5 border border-surface-variant flex flex-col justify-between">
+<div>
+<span class="text-[9px] font-label-sm font-bold uppercase tracking-wider text-primary">Key Deadline</span>
+<p class="font-label-md text-label-md font-semibold text-on-surface mt-0.5">Project Submissions</p>
+<p class="text-[11px] font-body-sm text-secondary mt-0.5">Final pitch deck uploads close Friday, April 4 at midnight.</p>
+</div>
+<span class="text-[10px] text-primary-container font-medium hover:underline cursor-pointer">View submission portal →</span>
+</div>
+</div>
+</section>
+<!-- EVENTS SNIPPET & FOOTER BANNER -->
+<footer class="mt-auto border-t-2 border-surface-variant pt-3">
+<div class="grid grid-cols-2 gap-3 text-[11px] font-body-sm text-secondary pb-3">
+<div class="flex items-start gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-primary-container">event</span>
+<div>
+<strong class="text-on-surface">Dean’s Public Lecture:</strong> "Ethics in Local Edge Architectures" · Aud. C · March 28, 2025
+              </div>
+</div>
+<div class="flex items-start gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-tertiary-container">verified</span>
+<div>
+<strong class="text-on-surface">Verification Status:</strong> Document layout verified against original print master.
+              </div>
+</div>
+</div>
+<div class="border-t border-surface-variant pt-2 flex items-center justify-between text-[10px] font-label-sm text-secondary">
+<span>Campus Chronicle Publishing Group © 2025 · ISSN 2411-9081</span>
+<span class="font-medium text-on-surface">Campus Chronicle • Page 1 of 2</span>
+</div>
+</footer>
+</div>
+<!-- CANVAS BOTTOM FLOATING TOOLBAR -->
+<nav aria-label="Canvas controls" class="fixed bottom-9 left-[calc(50%-180px)] transform -translate-x-1/2 bg-surface-container-lowest/95 backdrop-blur-md px-3 py-1.5 rounded-full border border-surface-variant shadow-[0px_4px_16px_rgba(0,0,0,0.12)] flex items-center space-x-3 z-30">
+<!-- Zoom Controls -->
+<div class="flex items-center space-x-1 border-r border-surface-variant pr-2.5">
+<button class="w-6 h-6 flex items-center justify-center rounded-full hover:bg-surface-container-low text-secondary hover:text-on-surface transition-colors" title="Zoom Out">
+<span class="material-symbols-outlined text-[15px]">remove</span>
+</button>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold px-1 min-w-[36px] text-center">100%</span>
+<button class="w-6 h-6 flex items-center justify-center rounded-full hover:bg-surface-container-low text-secondary hover:text-on-surface transition-colors" title="Zoom In">
+<span class="material-symbols-outlined text-[15px]">add</span>
+</button>
+<button class="px-2 py-0.5 rounded text-[11px] font-label-sm text-secondary hover:text-on-surface hover:bg-surface-container-low transition-colors ml-0.5">
+            Fit to width
+          </button>
+</div>
+<!-- Page Navigation -->
+<div class="flex items-center space-x-1 border-r border-surface-variant pr-2.5">
+<button class="w-6 h-6 flex items-center justify-center rounded hover:bg-surface-container-low text-secondary hover:text-on-surface" title="Previous Page">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<span class="font-label-sm text-label-sm text-on-surface font-medium px-1">Page 1 of 2</span>
+<button class="w-6 h-6 flex items-center justify-center rounded hover:bg-surface-container-low text-secondary hover:text-on-surface" title="Next Page">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+<button class="w-6 h-6 flex items-center justify-center rounded hover:bg-surface-container-low text-secondary hover:text-on-surface ml-1" title="View Thumbnails">
+<span class="material-symbols-outlined text-[16px]">grid_view</span>
+</button>
+</div>
+<!-- Grid and Guides Overlay Toggle -->
+<button class="flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-label-sm text-primary-container bg-[#EBF4FD] hover:bg-primary-fixed/30 transition-colors font-medium">
+<span class="material-symbols-outlined text-[14px]">grid_4x4</span>
+<span>Grid Guides</span>
+</button>
+</nav>
+</main>
+<!-- 3. RIGHT SIDEBAR (360px wide, Pure White Card Panel with Left 1px Border) -->
+<aside class="w-[360px] flex-shrink-0 bg-surface-container-lowest border-l border-surface-variant h-full flex flex-col z-30 shadow-sm">
+<!-- SIDEBAR HEADER -->
+<div class="p-4 border-b border-surface-variant flex-shrink-0">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Edit content</h2>
+<span class="bg-[#EBF4FD] text-primary-container font-label-sm text-[11px] px-2 py-0.5 rounded-full font-medium">
+              Editing Page 1
+            </span>
+</div>
+<button class="text-[11px] font-label-sm text-primary-container hover:underline font-semibold">
+            Expand all
+          </button>
+</div>
+<p class="font-body-sm text-[12px] text-secondary">
+          Select or update digitized components. All text changes synchronize instantly.
+        </p>
+</div>
+<!-- LIVE RULES NOTIFICATION STRIP -->
+<div class="p-3 bg-surface-container-low border-b border-surface-variant space-y-2 flex-shrink-0">
+<!-- Amber Rule Warning Box -->
+<div class="bg-[#FDF2E9] border border-[#F3C59D] rounded p-2.5 flex items-start gap-2">
+<span class="material-symbols-outlined text-[#B24020] text-[18px] flex-shrink-0 mt-0.5">warning</span>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-[#8C2C10]">Line Length Warning</span>
+<button class="font-label-sm text-[11px] font-semibold text-primary-container hover:underline">
+                Auto-fit text
+              </button>
+</div>
+<p class="font-body-sm text-[11px] text-[#8C2C10] mt-0.5 leading-tight">
+              Headline exceeds recommended line length (2 lines detected · max 65 chars recommended).
+            </p>
+</div>
+</div>
+<!-- Green Compliance Badge -->
+<div class="bg-[#E6F4EA] border border-[#A8DAB5] rounded px-2.5 py-1.5 flex items-center gap-1.5 text-tertiary-container">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span class="font-label-sm text-[11px] font-semibold">5 design rules passed (margins, font hierarchy, contrast)</span>
+</div>
+</div>
+<!-- ACCORDION CONTENT SECTIONS (Scrollable container) -->
+<div class="flex-1 overflow-y-auto custom-scrollbar divide-y divide-surface-variant">
+<!-- SECTION 1: Cover & Masthead (Collapsed) -->
+<div class="p-3 hover:bg-surface-container-low/50 transition-colors">
+<button class="w-full flex items-center justify-between text-left">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">expand_more</span>
+<span class="font-label-lg text-label-lg font-semibold text-on-surface">Cover &amp; Masthead</span>
+</div>
+<div class="flex items-center gap-1 text-tertiary-container font-label-sm text-[11px]">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span>Complete</span>
+</div>
+</button>
+</div>
+<!-- SECTION 2: Lead Editorial Story (OPEN / ACTIVE STATE) -->
+<div class="bg-surface-container-lowest border-l-4 border-l-primary-container p-3 space-y-3.5">
+<!-- Accordion Header -->
+<div class="flex items-center justify-between pb-1 border-b border-surface-variant/60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[18px]">expand_less</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Lead Editorial Story</span>
+</div>
+<span class="bg-[#EBF4FD] text-primary-container text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
+              Active Sync
+            </span>
+</div>
+<!-- Field 1: Story Headline -->
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold">Story Headline</label>
+<span class="font-label-sm text-[11px] text-[#B24020] font-medium font-mono">64/65</span>
+</div>
+<input class="w-full text-[13px] text-on-surface bg-surface-container-lowest border-2 border-primary-container rounded px-2.5 py-1.5 outline-none focus:ring-0 shadow-sm font-medium" type="text" value="New Local AI Laboratories Open for Collaborative Research Projects"/>
+</div>
+<!-- Field 2: Author / Byline -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-semibold mb-1">Author / Byline</label>
+<input class="w-full text-[13px] text-on-surface bg-surface-container-lowest border border-outline rounded px-2.5 py-1.5 focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" type="text" value="Dr. Eleanor Vance &amp; Student Tech Board"/>
+</div>
+<!-- Field 3: Feature Image Preview & Upload -->
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold">Feature Image</label>
+<span class="bg-surface-container-high text-secondary text-[10px] px-1.5 py-0.5 rounded font-medium">Locked 16:9</span>
+</div>
+<div class="p-2 border border-surface-variant rounded bg-surface-container-low flex items-center gap-3">
+<!-- Thumbnail -->
+<div class="w-16 h-12 rounded overflow-hidden flex-shrink-0 border border-surface-variant">
+<img class="w-full h-full object-cover" data-alt="Micro laboratory workstation computer monitor display showing green local neural node graphs and code terminal in high definition lighting. Neutral gray desk surface, clean corporate research environment with soft ambient LED background illumination." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVaSh2GVXclEVe4f9m0ZJb_YTvXPRwuutDo897UU9XG5NwwAQStRk2dmgFYBvkioZcsxvoMVnhahibhFUq-tgc5QWTRfpYADX4sJb3hLu3PHhe98UohXoJq1u7zKnQH3ZivBjq6fyzyXmWAabJMB6J_FgZARlQDbS6rX7nKqcZlxb_1NIfnTiT6scSYYsO0EIKm8YVLrZntQhggM9DQ77jNr_nN2SiFO-6Du_wsEw6K7Oh16x1LOW7"/>
+</div>
+<!-- Meta + Actions -->
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[11px] font-semibold text-on-surface truncate">lab_workstation.jpg</span>
+<span class="font-label-sm text-[10px] text-secondary">420 KB</span>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<button class="font-label-sm text-[11px] text-primary-container hover:underline font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">refresh</span>
+                    Replace image
+                  </button>
+<span class="text-surface-variant">|</span>
+<button class="font-label-sm text-[11px] text-secondary hover:text-on-surface">Crop</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Field 4: Story Body Copy with Mini Rich-Text Toolbar -->
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold">Story Body Copy</label>
+<div class="flex items-center gap-1 bg-surface-container-high rounded p-0.5 border border-surface-variant">
+<button class="w-5 h-5 flex items-center justify-center rounded hover:bg-surface-container-lowest text-secondary hover:text-on-surface font-bold text-[11px]" title="Bold">B</button>
+<button class="w-5 h-5 flex items-center justify-center rounded hover:bg-surface-container-lowest text-secondary hover:text-on-surface italic text-[11px]" title="Italic">I</button>
+<button class="w-5 h-5 flex items-center justify-center rounded hover:bg-surface-container-lowest text-secondary hover:text-on-surface" title="Link">
+<span class="material-symbols-outlined text-[13px]">link</span>
+</button>
+</div>
+</div>
+<textarea class="w-full text-[12px] leading-relaxed text-on-surface bg-surface-container-lowest border border-outline rounded p-2 focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none resize-none" rows="6">In a major milestone for decentralized university computing, the Department of Computer Science announced the inauguration of three brand-new collaborative laboratories equipped with local-first neural workstations. Unlike centralized cloud infrastructure, the hardware arrays emphasize private, low-latency, and sovereign data handling.
+
+The initiative provides student researchers and interdisciplinary faculty direct access to localized large language and computer vision pipelines without cloud latency or licensing subscription caps. Over forty undergraduate fellowship recipients have already registered exploratory capstone projects for this spring semester.</textarea>
+<div class="flex items-center justify-between mt-1 text-[11px] font-label-sm">
+<span class="text-tertiary-container font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+                182 / 200 words - Perfect fit
+              </span>
+<span class="text-secondary">2 Paragraphs</span>
+</div>
+</div>
+</div>
+<!-- SECTION 3: Articles & Highlights (Expandable) -->
+<div class="p-3 hover:bg-surface-container-low/50 transition-colors">
+<div class="flex items-center justify-between mb-2">
+<button class="flex items-center gap-2 text-left">
+<span class="material-symbols-outlined text-secondary text-[18px]">expand_more</span>
+<span class="font-label-lg text-label-lg font-semibold text-on-surface">Articles &amp; Highlights</span>
+</button>
+<span class="text-[11px] font-label-sm text-secondary">1 Article</span>
+</div>
+<div class="pl-6 space-y-2">
+<div class="p-2 border border-surface-variant rounded bg-surface-container-lowest flex items-center justify-between">
+<div class="truncate pr-2">
+<span class="font-label-sm text-[11px] font-semibold text-on-surface block truncate">Student Innovation Showcase Announced...</span>
+<span class="font-body-sm text-[10px] text-secondary">Author: Marcus Chen · 48 words</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[16px] cursor-pointer hover:text-on-surface">edit</span>
+</div>
+<button class="w-full py-1.5 border border-dashed border-outline-variant hover:border-primary-container rounded-full text-center font-label-sm text-[11px] font-semibold text-primary-container hover:bg-[#EBF4FD] transition-colors flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[14px]">add</span>
+              Add another article
+            </button>
+</div>
+</div>
+<!-- SECTION 4: Upcoming Campus Events (Expandable) -->
+<div class="p-3 hover:bg-surface-container-low/50 transition-colors">
+<button class="w-full flex items-center justify-between text-left mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">expand_more</span>
+<span class="font-label-lg text-label-lg font-semibold text-on-surface">Upcoming Campus Events</span>
+</div>
+<span class="text-[11px] font-label-sm text-secondary">2 Events</span>
+</button>
+<div class="pl-6 pt-1 space-y-2">
+<div class="text-[11px] font-label-sm bg-surface-container-low p-2 rounded border border-surface-variant">
+<div class="flex items-center justify-between font-semibold text-on-surface">
+<span>Dean's Public Lecture</span>
+<span class="text-primary-container">March 28, 2025</span>
+</div>
+<p class="text-secondary text-[10px] mt-0.5">Auditorium C · 4:00 PM EST</p>
+</div>
+</div>
+</div>
+<!-- SECTION 5: Footer & Legal Rules (Expandable) -->
+<div class="p-3 hover:bg-surface-container-low/50 transition-colors">
+<button class="w-full flex items-center justify-between text-left">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">expand_more</span>
+<span class="font-label-lg text-label-lg font-semibold text-on-surface">Footer &amp; Legal Rules</span>
+</div>
+<span class="font-label-sm text-[11px] text-tertiary-container font-medium">Synced</span>
+</button>
+</div>
+</div>
+<!-- SIDEBAR FOOTER ACTION -->
+<div class="p-3 border-t border-surface-variant bg-surface-container-lowest flex items-center justify-between flex-shrink-0">
+<button class="font-label-sm text-[11px] text-secondary hover:text-on-surface font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">history</span>
+          Section History
+        </button>
+<button class="px-3 py-1 rounded-full bg-primary-container text-on-primary font-label-sm text-[11px] font-semibold hover:bg-[#004182] transition-colors">
+          Apply to All Pages
+        </button>
+</div>
+</aside>
+</div>
+<!-- 4. BOTTOM STATUS BAR (Footer strip matching system screens) -->
+<footer class="h-7 bg-surface-container-lowest border-t border-surface-variant flex-shrink-0 z-40 px-4 flex items-center justify-between text-[11px] font-label-sm text-secondary">
+<!-- Left Status Indicators -->
+<div class="flex items-center space-x-4">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-[#057642]"></span>
+<span class="text-on-surface font-medium">Engine Ready</span>
+</div>
+<span class="text-surface-variant">|</span>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-primary-container">memory</span>
+<span>Local Models Active: <strong class="text-on-surface font-semibold">Ollama Llama 3 (8B-Q4_K_M)</strong></span>
+</div>
+<span class="text-surface-variant">|</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">speed</span>
+<span>RAM Footprint: <strong class="text-on-surface font-medium">218 MB</strong></span>
+</div>
+</div>
+<!-- Right Status & Mode Badges -->
+<div class="flex items-center space-x-3">
+<div class="flex items-center gap-1 text-tertiary-container">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span class="font-medium">Format Lock Enforced</span>
+</div>
+<span class="text-surface-variant">|</span>
+<div class="flex items-center gap-1 text-secondary">
+<span>Encoding: <strong>UTF-8 Pure Vector</strong></span>
+</div>
+<span class="text-surface-variant">|</span>
+<div class="text-secondary font-mono text-[10px]">
+        v2.4.2-local
+      </div>
+</div>
+</footer>
+</body></html>
