@@ -13,3 +13,4 @@ fixtures/private/
 *.log
 .uv/
 .bench/
+*.tsbuildinfo
