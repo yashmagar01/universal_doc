@@ -44,3 +44,14 @@ def test_check_request_matrix() -> None:
 def test_launch_token_required_for_session(client: TestClient) -> None:
     # Override the default (valid) token header so only the bogus launch token is presented.
     assert client.post("/api/v1/session", headers={LAUNCH_HEADER: "nope", HEADER: ""}).status_code == 401
+    assert client.post("/api/v1/session", headers={HEADER: ""}).status_code == 401
+
+
+def test_session_bootstraps_cookie_without_existing_session(app: FastAPI) -> None:
+    # The one-time URL is the only credential at bootstrap: no header and no cookie yet.
+    fresh = TestClient(app, base_url="http://localhost:8000")
+    r = fresh.post("/api/v1/session", headers={LAUNCH_HEADER: TOKEN})
+    assert r.status_code == 200
+    assert "templix_session" in r.cookies
+    # the planted SameSite=Strict cookie alone now authenticates every endpoint
+    assert fresh.get("/api/v1/templates").status_code == 200

@@ -8,6 +8,7 @@
     "/api/v1/status": {
       "get": {
         "summary": "Status",
+        "description": "Live system facts for the footer (FR-SYS-02). RAM is null until a probe exists.",
         "operationId": "status_api_v1_status_get",
         "responses": {
           "200": {
@@ -108,6 +109,49 @@
         }
       }
     },
+    "/api/v1/templates/ingest": {
+      "post": {
+        "summary": "Templates Ingest",
+        "description": "Accept a PDF upload and queue the ingestion job (FR-ING-01/03, §11).",
+        "operationId": "templates_ingest_api_v1_templates_ingest_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_templates_ingest_api_v1_templates_ingest_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Templates Ingest Api V1 Templates Ingest Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/templates/{tpl_id}": {
       "get": {
         "summary": "Templates Get",
@@ -149,6 +193,94 @@
                   "additionalProperties": true,
                   "title": "Response Templates Get Api V1 Templates  Tpl Id  Get"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/templates/{tpl_id}/analysis": {
+      "get": {
+        "summary": "Templates Analysis",
+        "description": "Ingestion result for the analysis screen: template + overall confidence (§6.3 step 5).",
+        "operationId": "templates_analysis_api_v1_templates__tpl_id__analysis_get",
+        "parameters": [
+          {
+            "name": "tpl_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Tpl Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Templates Analysis Api V1 Templates  Tpl Id  Analysis Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/templates/{tpl_id}/pages/{index}/reference.png": {
+      "get": {
+        "summary": "Template Page Reference",
+        "operationId": "template_page_reference_api_v1_templates__tpl_id__pages__index__reference_png_get",
+        "parameters": [
+          {
+            "name": "tpl_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Tpl Id"
+            }
+          },
+          {
+            "name": "index",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Index"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -251,6 +383,44 @@
                   "additionalProperties": true,
                   "title": "Response Documents Get Api V1 Documents  Doc Id  Get"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{doc_id}/export.pdf": {
+      "get": {
+        "summary": "Documents Export",
+        "description": "Export the document by replacing only edited slot text on the source PDF.\n\nThe PyMuPDF work runs in the ingest sandbox (D-007); this endpoint never imports it.",
+        "operationId": "documents_export_api_v1_documents__doc_id__export_pdf_get",
+        "parameters": [
+          {
+            "name": "doc_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Doc Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -643,6 +813,36 @@
         ],
         "title": "BBox"
       },
+      "Body_templates_ingest_api_v1_templates_ingest_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "allowManyPages": {
+            "type": "boolean",
+            "title": "Allowmanypages",
+            "default": false
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_templates_ingest_api_v1_templates_ingest_post"
+      },
       "Component": {
         "properties": {
           "id": {
@@ -714,6 +914,17 @@
               }
             ],
             "title": "Maxwords"
+          },
+          "charsPerLine": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Charsperline"
           },
           "fit": {
             "anyOf": [
@@ -911,6 +1122,49 @@
         ],
         "title": "FontDef"
       },
+      "FontResolution": {
+        "properties": {
+          "requested": {
+            "type": "string",
+            "title": "Requested"
+          },
+          "resolved": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolved"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FontSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "certainty": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Certainty",
+            "default": 1.0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "requested"
+        ],
+        "title": "FontResolution",
+        "description": "D-018 cascade result for one node's font. `resolved=None` means nothing matched (review item)."
+      },
       "FontSource": {
         "type": "string",
         "enum": [
@@ -1095,6 +1349,38 @@
               }
             ],
             "title": "Columns"
+          },
+          "columnGap": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Columngap"
+          },
+          "columnRule": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Columnrule"
+          },
+          "fontResolution": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FontResolution"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "assetId": {
             "anyOf": [
@@ -1356,6 +1642,17 @@
             "type": "array",
             "title": "Nodes",
             "default": []
+          },
+          "referenceSha": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Referencesha"
           }
         },
         "additionalProperties": false,
@@ -1500,6 +1797,69 @@
           "containerNodeId"
         ],
         "title": "Repeater"
+      },
+      "ReviewItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "nodeIds": {
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "type": "array",
+            "title": "Nodeids",
+            "default": []
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity",
+            "default": "warn"
+          },
+          "suggestion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suggestion"
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "default": 1.0
+          },
+          "autoFix": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Autofix"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "kind"
+        ],
+        "title": "ReviewItem",
+        "description": "One queue entry from ingestion (architecture §6.6): validators and unmatched regions\npropose; the user confirms. `confidence` gates \"Accept all detected\" (≥ 0.8, FR-TPL-02).\n`id` is deterministic (`kind-###`) so the queue is stable across re-ingests."
       },
       "Rule": {
         "properties": {
@@ -1870,6 +2230,14 @@
             },
             "type": "array",
             "title": "Rules",
+            "default": []
+          },
+          "reviewItems": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewItem"
+            },
+            "type": "array",
+            "title": "Reviewitems",
             "default": []
           },
           "fidelity": {

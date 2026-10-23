@@ -24,6 +24,7 @@ Cancel = threading.Event
 Handler = Callable[[dict[str, Any], Emit, Cancel], None]
 
 TERMINAL = ("done", "failed", "cancelled")
+MAX_TERMINAL_JOBS = 100  # keep recent history bounded; running jobs are never pruned
 
 
 class Job:
@@ -58,10 +59,17 @@ class JobRunner:
             raise KeyError(f"unknown job kind {kind!r}")
         job = Job(job_id=uuid.uuid4().hex, kind=kind, payload=payload or {})
         self._jobs[job.id] = job
+        self._prune()
         threading.Thread(
             target=self._run, args=(job, handler), name=f"job-{job.id[:8]}", daemon=True
         ).start()
         return job
+
+    def _prune(self) -> None:
+        """Drop the oldest terminal jobs so a long session cannot grow without bound."""
+        terminal = [job_id for job_id, job in self._jobs.items() if job.terminal]
+        for job_id in terminal[: max(0, len(terminal) - MAX_TERMINAL_JOBS)]:
+            del self._jobs[job_id]
 
     def cancel(self, job_id: str) -> Job | None:
         """Ask a running job to stop; returns the job, or ``None`` when unknown."""
@@ -92,10 +100,10 @@ class JobRunner:
         else:
             self._finish(job, "done", {"status": "done"})
 
-    @staticmethod
-    def _finish(job: Job, status: str, event: dict[str, Any]) -> None:
+    def _finish(self, job: Job, status: str, event: dict[str, Any]) -> None:
         job.status = status
         job.events.append(event)
+        self._prune()
 
 
 def _demo_handler(payload: dict[str, Any], emit: Emit, cancel: Cancel) -> None:

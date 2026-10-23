@@ -216,6 +216,7 @@ class Constraints(StrictModel):
     maxChars: int | None = None
     maxLines: int | None = None
     maxWords: int | None = None
+    charsPerLine: int | None = None
     fit: str | None = None
     aspect: str | None = None
     minDpi: int | None = None
@@ -272,6 +273,25 @@ class Repeater(StrictModel):
     overflow: Literal["flag", "clip", "new-page"] = "flag"
 
 
+class ReviewItem(StrictModel):
+    """One queue entry from ingestion (architecture §6.6): validators and unmatched regions
+    propose; the user confirms. `confidence` gates "Accept all detected" (≥ 0.8, FR-TPL-02).
+    `id` is deterministic (`kind-###`) so the queue is stable across re-ingests."""
+
+    id: str
+    kind: str
+    nodeIds: list[ULID] = []
+    severity: Severity = Severity.warn
+    suggestion: str | None = None
+    confidence: float = Field(default=1.0, ge=0.0, le=1.0)
+    autoFix: dict[str, Any] | None = None
+
+    @field_validator("nodeIds")
+    @classmethod
+    def _ulids(cls, v: Any) -> Any:
+        return [_check_ulid(x) for x in v]
+
+
 # --- Tokens (§5.5) ---
 
 
@@ -316,6 +336,7 @@ class Page(StrictModel):
     id: str
     size: Size
     nodes: list[Node] = []
+    referenceSha: str | None = None  # blob sha of the 150 dpi reference raster (§6.2)
 
 
 class Source(StrictModel):
@@ -352,6 +373,7 @@ class Template(StrictModel):
     components: list[Component] = []
     repeaters: list[Repeater] = []
     rules: list[Rule] = []
+    reviewItems: list[ReviewItem] = []
     fidelity: Fidelity | None = None
 
     @field_validator("id")

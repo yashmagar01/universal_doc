@@ -106,6 +106,18 @@
           "default": null,
           "title": "Maxwords"
         },
+        "charsPerLine": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Charsperline"
+        },
         "fit": {
           "anyOf": [
             {
@@ -380,6 +392,51 @@
       "title": "FontDef",
       "type": "object"
     },
+    "FontResolution": {
+      "additionalProperties": false,
+      "description": "D-018 cascade result for one node's font. `resolved=None` means nothing matched (review item).",
+      "properties": {
+        "requested": {
+          "title": "Requested",
+          "type": "string"
+        },
+        "resolved": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolved"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FontSource"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "certainty": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Certainty",
+          "type": "number"
+        }
+      },
+      "required": [
+        "requested"
+      ],
+      "title": "FontResolution",
+      "type": "object"
+    },
     "FontSource": {
       "enum": [
         "system",
@@ -542,6 +599,41 @@
           ],
           "default": null,
           "title": "Columns"
+        },
+        "columnGap": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Columngap"
+        },
+        "columnRule": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Columnrule"
+        },
+        "fontResolution": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FontResolution"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "assetId": {
           "anyOf": [
@@ -820,6 +912,18 @@
           },
           "title": "Nodes",
           "type": "array"
+        },
+        "referenceSha": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Referencesha"
         }
       },
       "required": [
@@ -952,6 +1056,71 @@
         "containerNodeId"
       ],
       "title": "Repeater",
+      "type": "object"
+    },
+    "ReviewItem": {
+      "additionalProperties": false,
+      "description": "One queue entry from ingestion (architecture §6.6): validators and unmatched regions\npropose; the user confirms. `confidence` gates \"Accept all detected\" (≥ 0.8, FR-TPL-02).\n`id` is deterministic (`kind-###`) so the queue is stable across re-ingests.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "nodeIds": {
+          "default": [],
+          "items": {
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "type": "string"
+          },
+          "title": "Nodeids",
+          "type": "array"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity",
+          "default": "warn"
+        },
+        "suggestion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suggestion"
+        },
+        "confidence": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "autoFix": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Autofix"
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ],
+      "title": "ReviewItem",
       "type": "object"
     },
     "Rule": {
@@ -1143,6 +1312,7 @@
             "maxChars": null,
             "maxLines": null,
             "maxWords": null,
+            "charsPerLine": null,
             "fit": null,
             "aspect": null,
             "minDpi": null
@@ -1338,6 +1508,14 @@
             "$ref": "#/$defs/Rule"
           },
           "title": "Rules",
+          "type": "array"
+        },
+        "reviewItems": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ReviewItem"
+          },
+          "title": "Reviewitems",
           "type": "array"
         },
         "fidelity": {

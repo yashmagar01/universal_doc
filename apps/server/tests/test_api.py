@@ -10,7 +10,7 @@ from typing import Any
 from fastapi.testclient import TestClient
 
 from templix.api.routes import MAX_OPS, MAX_PATCH_BYTES
-from templix.model import BBox, Node, NodeType, Page, Size, Slot, SlotKind, Template, new_ulid
+from templix.model import BBox, Node, NodeType, Page, Run, Size, Slot, SlotKind, Template, new_ulid
 from tests.conftest import TOKEN
 
 
@@ -39,10 +39,36 @@ def test_status_requires_token(client: TestClient) -> None:
     assert r.status_code == 401
 
 
+def test_http_errors_use_problem_details(client: TestClient) -> None:
+    forbidden = client.get("/api/v1/status", headers={"X-Templix-Token": ""})
+    assert forbidden.status_code == 401
+    assert forbidden.headers["content-type"].startswith("application/problem+json")
+    body = forbidden.json()
+    assert body["code"] == "unauthorized"
+    assert body["hint"]
+    assert body["detail"] == body["hint"]
+    assert body["instance"] == "/api/v1/status"
+
+    missing = client.get("/api/v1/templates/nope")
+    assert missing.status_code == 404
+    assert missing.json()["code"] == "not_found"
+
+    invalid = client.post("/api/v1/templates", json={})
+    assert invalid.status_code == 422
+    assert invalid.json()["code"] == "invalid_request"
+    assert invalid.json()["errors"]
+
+
 def test_status_ok(client: TestClient) -> None:
     r = client.get("/api/v1/status")
     assert r.status_code == 200
-    assert r.json()["schemaVersion"] == 1
+    body = r.json()
+    assert body["schemaVersion"] == 1
+    assert body["state"] == "ok"
+    assert body["engine"] == "ready"
+    assert body["privacyMode"] == "No telemetry"
+    assert body["parser"].startswith("PDF Parser:")
+    assert body["ram"] is None
 
 
 def test_security_headers_present(client: TestClient) -> None:
@@ -74,6 +100,35 @@ def test_template_crud(client: TestClient) -> None:
     assert dup.status_code == 409
 
 
+def test_layer_count_recurses_through_nested_groups(client: TestClient) -> None:
+    leaves = [
+        Node(id=new_ulid(), type=NodeType.text, role="body", bbox=BBox(x=0, y=0, w=10, h=10))
+        for _ in range(2)
+    ]
+    inner = Node(
+        id=new_ulid(),
+        type=NodeType.group,
+        role="section",
+        bbox=BBox(x=0, y=0, w=100, h=100),
+        children=leaves,
+    )
+    outer = Node(
+        id=new_ulid(),
+        type=NodeType.group,
+        role="section",
+        bbox=BBox(x=0, y=0, w=100, h=100),
+        children=[inner],
+    )
+    page = Page(
+        id=new_ulid(), size=Size(w=100, h=100), nodes=[outer]
+    )
+    tpl = Template(id=new_ulid(), name="Nested", pages=[page])
+    assert client.post("/api/v1/templates", json=tpl.model_dump(mode="json")).status_code == 201
+
+    row = next(t for t in client.get("/api/v1/templates").json() if t["id"] == tpl.id)
+    assert row["layerCount"] == 2
+
+
 def test_document_create_and_ops_roundtrip(client: TestClient) -> None:
     tpl, slot_id = make_template()
     client.post("/api/v1/templates", json=tpl.model_dump(mode="json"))
@@ -93,6 +148,34 @@ def test_document_create_and_ops_roundtrip(client: TestClient) -> None:
     undo = client.post(f"/api/v1/documents/{doc['id']}/ops", json=body["undo"])
     assert undo.status_code == 200
     assert undo.json()["document"]["content"]["values"][slot_id] == []
+
+
+def test_document_create_prefills_from_template_runs(client: TestClient) -> None:
+    node_id = new_ulid()
+    node = Node(
+        id=node_id,
+        type=NodeType.text,
+        role="title",
+        bbox=BBox(x=0, y=0, w=10, h=10),
+        runs=[Run(text="Original title")],
+    )
+    page = Page(id=new_ulid(), size=Size(w=100, h=100), nodes=[node])
+    slot = Slot(id=new_ulid(), nodeIds=[node_id], label="Title", kind=SlotKind.text)
+    tpl = Template(id=new_ulid(), name="Prefilled", pages=[page], slots=[slot])
+    client.post("/api/v1/templates", json=tpl.model_dump(mode="json"))
+
+    doc = client.post("/api/v1/documents", json={"templateId": tpl.id}).json()
+    assert doc["content"]["values"][slot.id] == [{"text": "Original title", "marks": []}]
+
+
+def test_export_requires_a_source_pdf(client: TestClient) -> None:
+    tpl, _ = make_template()
+    client.post("/api/v1/templates", json=tpl.model_dump(mode="json"))
+    doc = client.post("/api/v1/documents", json={"templateId": tpl.id}).json()
+
+    response = client.get(f"/api/v1/documents/{doc['id']}/export.pdf")
+    assert response.status_code == 409
+    assert "source PDF" in response.json()["hint"]
 
 
 def test_document_not_found(client: TestClient) -> None:
@@ -125,6 +208,31 @@ def test_ops_override_on_owned_node(client: TestClient) -> None:
     r = client.post(f"/api/v1/documents/{doc_id}/ops", json={"ops": [op]})
     assert r.status_code == 200
     assert r.json()["document"]["overrides"][node_id]["fill"] == "#ff0000"
+
+
+def test_ops_rejects_malformed_slot_value_with_422(client: TestClient) -> None:
+    """A non-list slot value fails inside invert_patch; it must not escape as a 500."""
+    tpl, slot_id = make_template()
+    doc_id = _seed(client, tpl)
+    patch: dict[str, Any] = {
+        "ops": [{"kind": "set_slot", "slotId": slot_id, "value": {"text": "not-a-list"}}]
+    }
+    r = client.post(f"/api/v1/documents/{doc_id}/ops", json=patch)
+    assert r.status_code == 422
+
+
+def test_ops_rejects_double_clear_with_422(client: TestClient) -> None:
+    """The second clear has no slot to invert against; it must not escape as a 500."""
+    tpl, slot_id = make_template()
+    doc_id = _seed(client, tpl)
+    patch: dict[str, Any] = {
+        "ops": [
+            {"kind": "clear_slot", "slotId": slot_id},
+            {"kind": "clear_slot", "slotId": slot_id},
+        ]
+    }
+    r = client.post(f"/api/v1/documents/{doc_id}/ops", json=patch)
+    assert r.status_code == 422
 
 
 def test_ops_rejects_too_many_ops(client: TestClient) -> None:

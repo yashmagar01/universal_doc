@@ -14,6 +14,7 @@ dependencies = [
     "keyring>=25.0",
     "python-multipart>=0.0.18",
     "pymupdf>=1.24",
+    "rapidfuzz>=3.14.1",
 ]
 
 [project.optional-dependencies]

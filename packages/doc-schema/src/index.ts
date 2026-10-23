@@ -19,6 +19,7 @@ export interface Constraints {
   maxChars?: number | null;
   maxLines?: number | null;
   maxWords?: number | null;
+  charsPerLine?: number | null;
   fit?: string | null;
   aspect?: string | null;
   minDpi?: number | null;
@@ -67,6 +68,13 @@ export interface FontDef {
   source?: FontSource;
 }
 
+export interface FontResolution {
+  requested: string;
+  resolved?: string | null;
+  source?: FontSource | null;
+  certainty?: number;
+}
+
 export type FontSource = "system" | "google" | "local";
 
 export interface Node {
@@ -88,6 +96,9 @@ export interface Node {
   fit?: Fit | null;
   align?: "left" | "center" | "right" | "justify" | null;
   columns?: number | null;
+  columnGap?: number | null;
+  columnRule?: boolean | null;
+  fontResolution?: FontResolution | null;
   assetId?: string | null;
   crop?: BBox | null;
   fitMode?: FitMode | null;
@@ -118,6 +129,7 @@ export interface Page {
   id: string;
   size: Size;
   nodes?: Node[];
+  referenceSha?: string | null;
 }
 
 export interface Patch {
@@ -140,6 +152,16 @@ export interface Repeater {
   min?: number;
   max?: number;
   overflow?: "flag" | "clip" | "new-page";
+}
+
+export interface ReviewItem {
+  id: string;
+  kind: string;
+  nodeIds?: string[];
+  severity?: Severity;
+  suggestion?: string | null;
+  confidence?: number;
+  autoFix?: Record<string, unknown> | null;
 }
 
 export interface Rule {
@@ -212,6 +234,7 @@ export interface Template {
   components?: Component[];
   repeaters?: Repeater[];
   rules?: Rule[];
+  reviewItems?: ReviewItem[];
   fidelity?: Fidelity | null;
 }
 
