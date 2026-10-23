@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { Banner, Button, Card, FileChip, IconButton, Icon, Tag, TemplateCard } from "@templix/ui";
 import { AppShell } from "./AppShell";
 import { copy } from "../lib/copy";
+import type { ProfileInfo } from "../lib/types";
 import { fixtureCounts, fixtureDocuments, fixtureProvider, fixtureStatus, fixtureTemplates } from "../fixtures/demo";
 
 export function HomePage() {
@@ -10,7 +11,7 @@ export function HomePage() {
   return (
     <AppShell active="home" status={fixtureStatus}>
       <div className="space-y-5">
-        <GreetingHeader />
+        <GreetingHeader user={fixtureStatus.user} />
         <div className="grid grid-cols-12 gap-5">
           <TemplatesTile />
           <PrivacyTile />
@@ -42,21 +43,21 @@ export function HomePage() {
   );
 }
 
-function GreetingHeader() {
-  const parts = fixtureStatus.user.name.split(" ");
+export function GreetingHeader({ user }: { user?: ProfileInfo }) {
+  const parts = user?.name.split(" ") ?? [];
   const initials = ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase();
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="flex shrink-0 items-center gap-3">
         <span className="grid size-12 place-items-center rounded-full bg-primary text-lg font-semibold text-white">
-          {initials}
+          {user ? initials : <Icon name="manage_accounts" />}
         </span>
         <div>
           <h1 className="text-headline-md font-semibold text-secondary">
-            Welcome back, {parts[0] ?? fixtureStatus.user.name}
+            {user ? `Welcome back, ${parts[0] ?? user.name}` : "Welcome back"}
           </h1>
           <p className="text-sm text-ink-2">
-            {fixtureStatus.user.role} · {fixtureStatus.user.team}
+            {user ? `${user.role} · ${user.team}` : "Local workspace · your files stay on this machine"}
           </p>
         </div>
       </div>
@@ -83,6 +84,7 @@ function TemplatesTile() {
       <div className="flex flex-wrap gap-4">
         {fixtureTemplates.map((tpl) => (
           <Link key={tpl.id} to={`/templates/${tpl.id}/analysis`} className="flex-1 basis-[180px] min-w-[180px]">
+            <span className="sr-only">{tpl.name}</span>
             <TemplateCard
               name={tpl.name}
               meta={`${tpl.layers} layers extracted · ${tpl.pages} pages · Last used ${tpl.lastUsed}`}
@@ -96,7 +98,7 @@ function TemplatesTile() {
   );
 }
 
-function PrivacyTile() {
+export function PrivacyTile() {
   const p = fixtureProvider;
   const text = p.connected
     ? copy.privacy.cardProvider(p.label)
@@ -113,7 +115,7 @@ function PrivacyTile() {
   );
 }
 
-function EngineTile() {
+export function EngineTile() {
   const connected = fixtureProvider.connected;
   return (
     <Card
@@ -144,7 +146,7 @@ function EngineTile() {
   );
 }
 
-function RecentWorkTile() {
+export function RecentWorkTile() {
   return (
     <Card
       className="col-span-12 min-[900px]:col-span-7"
