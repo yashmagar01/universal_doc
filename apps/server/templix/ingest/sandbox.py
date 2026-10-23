@@ -36,8 +36,9 @@ from .errors import HINTS
 # 3 = worker MemoryError, -9 = SIGKILL from RLIMIT_CPU.
 _LIMIT_EXIT_CODES = {3, 0xC0000017, 0xC00000A3, -1073741819, -1073741541, -9}
 
+_K32: Any = None
 if os.name == "nt":
-    _K32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
+    _K32 = cast(Any, ctypes).windll.kernel32
 
 
 @dataclass(frozen=True)
@@ -172,7 +173,8 @@ def _spawn_kwargs(limits: Limits) -> dict[str, Any]:
         import resource
 
         resource.setrlimit(resource.RLIMIT_AS, (limits.memory_bytes, limits.memory_bytes))
-        resource.setrlimit(resource.RLIMIT_CPU, (max(int(limits.wall_clock_s), 1) + 1,) * 2)
+        cpu_limit = max(int(limits.wall_clock_s), 1) + 1
+        resource.setrlimit(resource.RLIMIT_CPU, (cpu_limit, cpu_limit))
         resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 
     return {"preexec_fn": apply}
@@ -222,21 +224,25 @@ def _windows_job(proc: subprocess.Popen[Any], limits: Limits) -> int | None:
     JobObjectExtendedLimitInformation = 9
 
     job = _K32.CreateJobObjectW(None, None)
+    if not job:
+        return None
     info = ExtendedLimitInfo()
     info.BasicLimitInformation.LimitFlags = (
         JOB_OBJECT_LIMIT_PROCESS_MEMORY | JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
     )
     info.ProcessMemoryLimit = limits.memory_bytes
-    ok = _K32.SetInformationJobObject(
-        job, JobObjectExtendedLimitInformation, ctypes.byref(info), ctypes.sizeof(info)
+    ok = bool(
+        _K32.SetInformationJobObject(
+            job, JobObjectExtendedLimitInformation, ctypes.byref(info), ctypes.sizeof(info)
+        )
     )
     # Child may already have exited (fast probes) — a failed assignment is harmless.
     # `._handle` exists only on Windows; cast(Any, ...) keeps pyright strict out of ctypes land.
-    ok = ok and _K32.AssignProcessToJobObject(job, int(cast(Any, proc)._handle))
+    ok = ok and bool(_K32.AssignProcessToJobObject(job, int(cast(Any, proc)._handle)))
     if not ok:
         _K32.CloseHandle(job)
         return None
-    return job
+    return int(job)
 
 
 def _dir_bytes(path: Path) -> int:

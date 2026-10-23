@@ -197,7 +197,7 @@ def _run_allocator(limits: Limits | None) -> tuple[int, bytes, bytes]:
         out, err = proc.communicate(timeout=30)
     finally:
         if job is not None:
-            ctypes.windll.kernel32.CloseHandle(job)  # pyright: ignore[reportAttributeAccessIssue]
+            cast(Any, ctypes).windll.kernel32.CloseHandle(job)
     return proc.returncode, cast(bytes, out or b""), cast(bytes, err or b"")
 
 
