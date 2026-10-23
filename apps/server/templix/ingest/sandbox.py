@@ -36,9 +36,7 @@ from .errors import HINTS
 # 3 = worker MemoryError, -9 = SIGKILL from RLIMIT_CPU.
 _LIMIT_EXIT_CODES = {3, 0xC0000017, 0xC00000A3, -1073741819, -1073741541, -9}
 
-_K32: Any = None
-if os.name == "nt":
-    _K32 = cast(Any, ctypes).windll.kernel32
+_K32: Any = cast(Any, ctypes).windll.kernel32 if os.name == "nt" else None
 
 
 @dataclass(frozen=True)
