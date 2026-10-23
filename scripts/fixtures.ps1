@@ -2,5 +2,10 @@
 $ErrorActionPreference = "Stop"
 $root = $PSScriptRoot | Split-Path
 Push-Location (Join-Path $root "apps\server")
-uv run python (Join-Path $root "fixtures\generate.py")
-exit $LASTEXITCODE
+try {
+  uv run python (Join-Path $root "fixtures\generate.py")
+  $code = $LASTEXITCODE
+} finally {
+  Pop-Location
+}
+exit $code

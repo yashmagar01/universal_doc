@@ -59,6 +59,11 @@ jobs:
           uv run ruff check .
           uv run pyright .
 
+      - name: Generate fixture PDFs
+        run: |
+          cd apps/server
+          uv run python ../../fixtures/generate.py
+
       - name: Python tests (coverage floor 60%)
         working-directory: apps/server
         run: uv run --with pytest-cov==7.1.0 pytest -q --cov=templix --cov-report=term --cov-fail-under=60
@@ -69,11 +74,6 @@ jobs:
           uv run python -m templix.model.generate
           cd ../..
           git diff --exit-code -- packages/doc-schema
-
-      - name: Generate fixture PDFs
-        run: |
-          cd apps/server
-          uv run python ../../fixtures/generate.py
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium

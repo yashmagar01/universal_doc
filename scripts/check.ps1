@@ -38,6 +38,9 @@ Pop-Location
 Write-Host "[check] unit tests" -ForegroundColor Cyan
 npx vitest run
 if ($LASTEXITCODE -ne 0) { $failed = 1 }
+Write-Host "[check] fixtures (generate for Python tests)" -ForegroundColor Cyan
+& (Join-Path $PSScriptRoot "fixtures.ps1")
+if ($LASTEXITCODE -ne 0) { $failed = 1 }
 Push-Location (Join-Path $root "apps\server")
 if (Test-Path "tests") {
   uv run pytest -q
