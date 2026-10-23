@@ -49,6 +49,7 @@ architecture sections are `§` in `system-architecture.md`.
 | D-030 | Hosted OCR services (including ocr.z.ai) are not used | Accepted |
 | D-031 | TS types are rendered from JSON Schema by the Python generator, not `openapi-typescript` | Proposed |
 | D-032 | Job handlers run inline in M1; background execution lands with M2 | Accepted |
+| D-033 | Irregular-table validation waits for table detection | Proposed |
 
 ---
 
@@ -338,11 +339,21 @@ thread per job: handlers never block the request, `POST /jobs/{id}/cancel` sets 
 handler polls (FR-ING-03: stop within 2 s), and the job ends `done`, `failed` or `cancelled`. The public
 surface (`register` / `submit` / `get` + event list) is unchanged — SSE reads the same live event list.
 **Alternatives rejected.** `ProcessPoolExecutor` (the ingestion work already runs in its own sandboxed
-subprocess — D-034; a pool would add a second process layer for no gain), `asyncio` tasks (handlers are
+subprocess - see `apps/server/templix/ingest/sandbox.py`; a pool would add a second process layer for no
+gain), `asyncio` tasks (handlers are
 blocking native/Python work, not I/O; threads keep the runner synchronous and testable).
-**Consequences.** Handlers must poll `cancel` cooperatively and touch only thread-local state — the DB
+**Consequences.** Handlers must poll `cancel` cooperatively and touch only thread-local state - the DB
 connection is opened per `transaction()` inside the handler. Job state relies on the GIL for its attribute
 writes (no lock); revisit only if event ordering ever races.
+
+## D-033 - Irregular-table validation waits for table detection
+**Status:** Proposed
+**Context.** FR-ING-13 lists an irregular-table validator. No table detector exists yet (FR-ING-20 is
+P2), so the pipeline produces no `table` nodes and a validator would have nothing to inspect.
+**Decision.** Defer the irregular-table validator until FR-ING-20 lands. Do not ship a validator that
+cannot run, and record the gap in the M2 report.
+**Consequences.** FR-ING-13 remains partially covered until tables exist; the deferral is explicit
+rather than silently claimed as done.
 
 ---
 

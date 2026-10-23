@@ -197,7 +197,7 @@ Glossary: **Template**, **Content**, **Document**, **Slot**, **Section**, **Comp
 
 | ID | Requirement | Pri | Ph | Acceptance |
 |---|---|---|---|---|
-| FR-SYS-01 | Top navigation: logo + "LOCAL" chip, search, tabs **Home · Templates · Documents · Models · Privacy**, notifications, profile menu. (Labels shortened vs Stitch to avoid wrapping.) | M | P1 | Active tab has 2-px primary underline; all tabs keyboard reachable. |
+| FR-SYS-01 | Top navigation: logo + "LOCAL APP" chip, search, tabs **Home · Templates · Documents · Models · Privacy**, notifications, profile menu. (Chip label matches the `badge.local` copy deck; labels shortened vs Stitch to avoid wrapping.) | M | P1 | Active tab has 2-px primary underline; all tabs keyboard reachable. |
 | FR-SYS-02 | Footer status bar content is computed: *Engine Ready*, active AI engine/model, RAM, parser version, privacy mode, "No telemetry", version. | M | P1 | Values from `/status`; never static strings for dynamic facts. |
 | FR-SYS-03 | Keyboard-shortcuts dialog (`?`). | S | P1 | Lists all registered shortcuts from a single registry. |
 | FR-SYS-04 | Notifications center for job completion/failure with deep links. | S | P1 | Bell dot shows unread; list is persisted locally. |
