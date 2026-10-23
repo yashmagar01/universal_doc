@@ -1,6 +1,6 @@
 # Progress
 
-## Status: M2 + a narrow manual end-to-end slice committed on main, unapproved (2026-10-23)
+## Status: M2 + a narrow manual end-to-end slice committed on main; CI green; unapproved (2026-10-23)
 
 The baseline audit (`docs/audits/engineering-baseline-audit-v2.md`) recorded the previous ambiguity: this
 file said "M1 complete, awaiting approval" while a substantial M2 tree existed uncommitted. That tree is
@@ -50,8 +50,9 @@ Goal: upload PDF → analysis → create document → edit text → export PDF, 
 ### 2026-10-23 — P1 evidence: CI, docs, frontend tests
 
 - `.github/workflows/ci.yml`: one `gate` job runs eslint, 5x tsc, vitest, ruff, pyright, pytest,
-  schema freshness, fixture e2e, and live e2e on `ubuntu-latest`. The first green run is triggered by
-  this push; confirm it on GitHub.
+  schema freshness, fixture e2e, and live e2e on `ubuntu-latest`. First green run:
+  [39914937296](https://github.com/yashmagar01/universal_doc/actions/runs/39914937296) on `a2b2ba6`
+  (1m58s). Follow-up fixes made the sandbox typing Linux-clean and generated fixtures before pytest.
 - `README.md` (quick-start, layout, gates, security, licence) and `apps/server/README.md`
   (satisfies the `readme` field in `pyproject.toml`).
 - `THIRD_PARTY_NOTICES.md` covers runtime web/server dependencies, fonts, and the PyMuPDF
@@ -80,8 +81,7 @@ Goal: upload PDF → analysis → create document → edit text → export PDF, 
   format (built scope, evidence table, deviations, gaps, owner questions).
 
 Still open before M2 approval: owner review/approval of the committed slices, the D-007/OQ-1
-(PyMuPDF/AGPL) decision, the first green CI run, and NFR-TEST-04 parity enforcement (still
-scaffold-only).
+(PyMuPDF/AGPL) decision, and NFR-TEST-04 parity enforcement (still scaffold-only).
 
 ### M1 — Backend core, data model, security
 
@@ -123,7 +123,7 @@ scaffold-only).
 
 1. Resolve D-007/OQ-1 (PyMuPDF/AGPL) and the distribution decision.
 2. Review and approve the committed M2 + manual-slice slices.
-3. Confirm the first CI run on GitHub and fix any failures.
+3. Keep the CI gate green (`39914937296` is the first green run).
 4. Implement NFR-TEST-04 landmark comparison; it still needs the Stitch mapping sign-off.
 5. Only then start M3 (render-core, rules, full export, fidelity). The manual slice is useful today but
    is not a substitute for M3 acceptance.

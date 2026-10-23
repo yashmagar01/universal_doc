@@ -53,6 +53,7 @@ Commands and results from the latest runs:
 | `uv run ruff check .` | clean |
 | `uv run pyright .` | clean |
 | `npm run check` | **green**, including schema freshness |
+| GitHub Actions `ci` (run `39914937296`) | **green**: audits, lint, types, tests, schema, fixture e2e, live e2e |
 | `git diff -- packages/doc-schema` after regeneration | current (matches generator) |
 
 Acceptance mapping:
@@ -94,8 +95,8 @@ Acceptance mapping:
 
 - **M2 is committed but unapproved.** Owner review/approval of the reviewable slices remains required;
   otherwise status and rollback still need an explicit acceptance decision (audit R-01).
-- **CI is authored; this push triggers its first run.** `.github/workflows/ci.yml` is committed; confirm
-  the first green run on GitHub and fix any failures (audit R-05).
+- **CI is green.** Run [`39914937296`](https://github.com/yashmagar01/universal_doc/actions/runs/39914937296)
+  passed on `a2b2ba6`; keep it green (audit R-05).
 - **NFR-TEST-04 parity is still capture-only.** No geometry tolerance comparison; needs the Stitch mapping
   sign-off (audit R-06).
 - **Early-allocation race.** The Windows Job Object is assigned just after `Popen`, so a child that
@@ -131,6 +132,6 @@ Acceptance mapping:
 4. **Page-limit ceiling:** keep the spec's 100-page override, or document “no practical limit”?
 5. **Parity sign-off:** who maps Stitch landmarks to `data-qa` regions, and against which PNGs?
 
-**Proposed next step:** review/approve the committed slices, confirm the first CI run on GitHub, then
-close M2 and start M3 only with explicit approval. Any parity or memory-cap work stays visible as open
-P2 items rather than being silently skipped.
+**Proposed next step:** review/approve the committed slices, then close M2 and start M3 only with
+explicit approval. CI is green; any parity or memory-cap work stays visible as open P2 items rather
+than being silently skipped.
