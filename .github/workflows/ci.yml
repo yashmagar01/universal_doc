@@ -1,0 +1,99 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Python environment
+        working-directory: apps/server
+        run: uv sync --frozen --extra dev
+
+      - name: Dependency audit (pnpm)
+        run: pnpm audit --audit-level high
+
+      - name: Dependency audit (Python)
+        working-directory: apps/server
+        run: uv run --with pip-audit==2.10.1 pip-audit --local
+
+      - name: Lint (eslint: code + copy + metrics)
+        run: npx eslint . --no-warn-ignored
+
+      - name: Typecheck (5 workspaces)
+        run: |
+          npx tsc --noEmit -p packages/ui
+          npx tsc --noEmit -p apps/web
+          npx tsc --noEmit -p packages/render-core
+          npx tsc --noEmit -p packages/rules
+          npx tsc --noEmit -p packages/doc-schema
+
+      - name: Unit tests (vitest)
+        run: npx vitest run
+
+      - name: Python lint and types
+        working-directory: apps/server
+        run: |
+          uv run ruff check .
+          uv run pyright .
+
+      - name: Python tests (coverage floor 60%)
+        working-directory: apps/server
+        run: uv run --with pytest-cov==7.1.0 pytest -q --cov=templix --cov-report=term --cov-fail-under=60
+
+      - name: Schema freshness
+        run: |
+          cd apps/server
+          uv run python -m templix.model.generate
+          cd ../..
+          git diff --exit-code -- packages/doc-schema
+
+      - name: Generate fixture PDFs
+        run: |
+          cd apps/server
+          uv run python ../../fixtures/generate.py
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Fixture e2e
+        working-directory: e2e
+        env:
+          E2E_WEB_PORT: "5175"
+        run: npx playwright test
+
+      - name: Live e2e
+        working-directory: e2e
+        run: npx playwright test -c playwright.live.config.ts
+
+      - name: Upload Playwright reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          if-no-files-found: ignore
