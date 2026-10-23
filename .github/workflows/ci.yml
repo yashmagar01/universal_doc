@@ -39,7 +39,7 @@ jobs:
         working-directory: apps/server
         run: uv run --with pip-audit==2.10.1 pip-audit --local
 
-      - name: Lint (eslint: code + copy + metrics)
+      - name: Lint (ESLint code, copy, metrics)
         run: npx eslint . --no-warn-ignored
 
       - name: Typecheck (5 workspaces)
